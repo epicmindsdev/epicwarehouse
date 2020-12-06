@@ -4,17 +4,17 @@
     <label class="box-link deal">Dealbox 3 <input class="box-input deal" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
     <label class="box-link check">Checkbox 13 <input class="box-input check" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
     <label class="box-link stock">Stockbox 23 <input class="box-input stock" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
-      <button class="btn-back"><b><b>ZURÜCK</b></b></button>
+    <b-row class="p-element-layout" v-show="this.viewState !== 1" style="margin-left: auto; margin-right: auto">
+      <button class="btn-back" v-on:click="changeToPreviousViewState()"><b><b>ZURÜCK</b></b></button>
     </b-row>
-    <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
+    <b-row class="p-element-layout" v-show="this.viewState === 1" style="margin-left: auto; margin-right: auto">
       <label
           style="min-width: 100%; margin-left: auto; margin-right: auto;">
         <input class="input-top" placeholder="LPN Code einscannen">
       </label>
     </b-row>
     <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
-      <b-col class="card c-left" style="border-radius: 5px">
+      <b-col class="card c-left" v-show="this.viewState !== 6" style="border-radius: 5px">
         <div class="p-title"><h5>Productname</h5></div>
         <div class="spacer-s"></div>
         <div class="p-price">€ 29.48</div>
@@ -54,20 +54,20 @@
           </b-tabs>
         </div>
       </b-col>
-      <b-col class="card c-right" v-show="this.viewState === 'location'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 1" style="border-radius: 5px">
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentLocation('DEALBOX')"><b>Dealbox</b></button>
         <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation('CHECKBOX')"><b>Checkbox</b></button>
         <button class="prime-btn btn-red" v-on:click="setCurrentLocation('STOCKBOX')"><b>Stockbox</b></button>
       </b-col>
-      <b-col class="card c-right" v-show="this.viewState === 'condition'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 2" style="border-radius: 5px">
         <div class="step-title"><h5>Zustand</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentCondition('1000')"><b>Neu</b></button>
         <button class="prime-btn btn-red" v-on:click="setCurrentCondition('3000')"><b>Gebraucht</b></button>
       </b-col>
-      <b-col class="card c-right" v-show="this.viewState === 'description'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 3" style="border-radius: 5px">
         <div class="step-title"><h5>Zustandsbeschreibung</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentDescription('Neuwertig')"><b>Neuwertig</b></button>
@@ -80,9 +80,9 @@
         <button class="prime-btn btn-submit" v-on:click="setCurrentDescription(currentCustomDescription)"><b>ÜBERNEHMEN</b></button>
         <div class="prime-btn custom-output">{{ this.currentDescription }}</div>
         <button class="prime-btn btn-delete" v-on:click="deleteCurrentDescription()"><b>LÖSCHEN</b></button>
-        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState('package')"><b>WEITER</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(4)"><b>WEITER</b></button>
       </b-col>
-      <b-col class="card c-right" v-show="this.viewState === 'package'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 4" style="border-radius: 5px">
         <div class="step-title"><h5>Originalverpackung</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentPackage('Neuwertig')"><b>Neuwertig</b></button>
@@ -90,7 +90,7 @@
         <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Stark beschädigt')"><b>Stark beschädigt</b></button>
         <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Nicht vorhanden')"><b>Nicht vorhanden</b></button>
       </b-col>
-      <b-col class="card c-right" v-show="this.viewState === 'description'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 5" style="border-radius: 5px">
         <div class="step-title"><h5>Zustandsbeschreibung</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentAccess('Neuwertig')"><b>Neuwertig</b></button>
@@ -103,7 +103,7 @@
         <button class="prime-btn btn-submit" v-on:click="setCurrentAccess(currentCustomAccess)"><b>ÜBERNEHMEN</b></button>
         <div class="prime-btn custom-output">{{ this.currentAccess }}</div>
         <button class="prime-btn btn-delete" v-on:click="deleteCurrentAccess()"><b>LÖSCHEN</b></button>
-        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState('confirm')"><b>WEITER</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(6)"><b>WEITER</b></button>
       </b-col>
     </b-row>
   </div>
@@ -120,7 +120,7 @@ export default {
   },
   data() {
     return {
-      viewState: 'location',
+      viewState: 1, // 1: Location
       currentDealBox: '',
       currentCheckBox: '',
       currentStockBox: '',
@@ -151,14 +151,17 @@ export default {
     changeToNextViewState: function (state) {
       this.viewState = state;
     },
+    changeToPreviousViewState: function () {
+      this.viewState = this.viewState - 1;
+    },
     setCurrentLocation: function (location) {
       this.currentLocation = location;
-      this.changeToNextViewState('condition');
+      this.changeToNextViewState(2); // 2: Condition
       console.log("Location: " + this.currentLocation + " | View State: " + this.viewState)
     },
     setCurrentCondition: function (condition) {
       this.currentCondition = condition;
-      this.changeToNextViewState('description');
+      this.changeToNextViewState(3); // 3: Description
       console.log("Zustand: " + this.currentCondition + " | View State: " + this.viewState)
     },
     setCurrentDescription: function (description) {
@@ -181,7 +184,7 @@ export default {
     },
     setCurrentPackage: function (pack) {
       this.currentPackage = pack;
-      this.changeToNextViewState('access')
+      this.changeToNextViewState(5)
     },
     setCurrentAccess: function (access) {
       if (access !== '') {
@@ -396,6 +399,8 @@ export default {
   width: 100%;
   height: 45px;
   font-size: 18px;
+  margin-top: 10px;
+  margin-bottom: 8px;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
 }
 
@@ -419,6 +424,7 @@ export default {
   font-size: 18px;
   height: 45px;
   min-width: 100%;
+  margin-top: 10px;
   padding: 10px 10px 10px 45px;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
   background-image: url(https://morfalto.sirv.com/suchen-2.png?w=18&h=18);
