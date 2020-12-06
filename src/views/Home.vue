@@ -13,46 +13,46 @@
     <b-row class="p-element-layout" v-show="this.viewState === 1" style="margin-left: auto; margin-right: auto">
       <label
           style="min-width: 100%; margin-left: auto; margin-right: auto;">
-        <input class="input-top" placeholder="LPN Code einscannen">
+        <input class="input-top" v-model="id" v-on:keydown.enter="getProductById(id)" placeholder="LPN Code einscannen">
       </label>
     </b-row>
     <!-- product check -->
     <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
       <!-- ProductDetails -->
       <b-col class="card c-left" v-show="this.viewState !== 6" style="border-radius: 5px">
-        <div class="p-title"><h5>Productname</h5></div>
+        <div class="p-title"><h5>{{ this.selectedProduct.name }}</h5></div>
         <div class="spacer-s"></div>
-        <div class="p-price">€ 29.48</div>
+        <div class="p-price">€ {{ this.selectedProduct.price }}</div>
         <div class="spacer-m"></div>
         <div class="tab-container">
           <b-tabs>
             <b-tab class="img-tab" title="1" active>
               <div class="p-images"><img class="p-image-item"
-                                         src="https://morfalto.sirv.com/Images/31Lw%2BzKJUgL._AC_SX355_.jpg"
+                                         :src=this.selectedProduct.image1
                                          alt="image1">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="2" active>
               <div class="p-images"><img class="p-image-item"
-                                         src="https://morfalto.sirv.com/Images/31Lw%2BzKJUgL._AC_SX355_.jpg"
+                                         :src=this.selectedProduct.image2
                                          alt="image2">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="3" active>
               <div class="p-images"><img class="p-image-item"
-                                         src="https://morfalto.sirv.com/Images/31Lw%2BzKJUgL._AC_SX355_.jpg"
+                                         :src=this.selectedProduct.image3
                                          alt="image3">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="4" active>
               <div class="p-images"><img class="p-image-item"
-                                         src="https://morfalto.sirv.com/Images/31Lw%2BzKJUgL._AC_SX355_.jpg"
+                                         :src=this.selectedProduct.image4
                                          alt="image4">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="5" active>
               <div class="p-images"><img class="p-image-item"
-                                         src="https://morfalto.sirv.com/Images/31Lw%2BzKJUgL._AC_SX355_.jpg"
+                                         :src=this.selectedProduct.image5
                                          alt="image5">
               </div>
             </b-tab>
@@ -131,6 +131,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
+import axios from "axios";
 
 export default {
   name: 'Home',
@@ -140,6 +141,7 @@ export default {
   data() {
     return {
       viewState: 1, // 1: Location
+      id: '',
       currentDealBoxValue: '',
       currentDealBox: '',
       currentCheckBoxValue: '',
@@ -161,6 +163,13 @@ export default {
     }
   },
   methods: {
+    getProductById: function (id) {
+      console.log(id);
+      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
+        console.log(response.data)
+        this.selectedProduct = response.data[0];
+      })
+    },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
         this.currentDealBox = "DEALBOX " + dealBox;
