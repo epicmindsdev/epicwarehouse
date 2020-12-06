@@ -1,9 +1,9 @@
 <template>
   <div class="home">
-    <HelloWorld msg=""/>
-    <label class="box-link">Dealbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link">Checkbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link">Stockbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <!--<HelloWorld msg=""/>-->
+    <label class="box-link deal">Dealbox 3 <input class="box-input deal" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link check">Checkbox 13 <input class="box-input check" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link stock">Stockbox 23 <input class="box-input stock" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
     <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
       <button class="btn-back"><b><b>ZURÜCK</b></b></button>
     </b-row>
@@ -13,7 +13,6 @@
         <input class="input-top" placeholder="LPN Code einscannen">
       </label>
     </b-row>
-
     <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
       <b-col class="card c-left" style="border-radius: 5px">
         <div class="p-title"><h5>Productname</h5></div>
@@ -55,12 +54,56 @@
           </b-tabs>
         </div>
       </b-col>
-      <b-col class="card c-right" v-if="this.viewState === 'location'" style="border-radius: 5px">
+      <b-col class="card c-right" v-show="this.viewState === 'location'" style="border-radius: 5px">
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
-        <button class="prime-btn btn-green" v-on:click="changeViewState('condition')"><b>Dealbox</b></button>
-        <button class="prime-btn btn-yellow" v-on:click=""><b>Checkbox</b></button>
-        <button class="prime-btn btn-red" v-on:click=""><b>Stockbox</b></button>
+        <button class="prime-btn btn-green" v-on:click="setCurrentLocation('DEALBOX')"><b>Dealbox</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation('CHECKBOX')"><b>Checkbox</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentLocation('STOCKBOX')"><b>Stockbox</b></button>
+      </b-col>
+      <b-col class="card c-right" v-show="this.viewState === 'condition'" style="border-radius: 5px">
+        <div class="step-title"><h5>Zustand</h5></div>
+        <div class="spacer-s"></div>
+        <button class="prime-btn btn-green" v-on:click="setCurrentCondition('1000')"><b>Neu</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentCondition('3000')"><b>Gebraucht</b></button>
+      </b-col>
+      <b-col class="card c-right" v-show="this.viewState === 'description'" style="border-radius: 5px">
+        <div class="step-title"><h5>Zustandsbeschreibung</h5></div>
+        <div class="spacer-s"></div>
+        <button class="prime-btn btn-green" v-on:click="setCurrentDescription('Neuwertig')"><b>Neuwertig</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Leichte Gebrauchsspuren')"><b>Leichte Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Kleine Kratzer')"><b>Kleine Kratzer</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Starke Gebrauchsspuren')"><b>Starke Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Grosse Kratzer')"><b>Grosse Kratzer</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Nicht auf Funktion überprüft')"><b>Nicht auf Funktion überprüft</b></button>
+        <input class="prime-btn custom-input" v-model="currentCustomDescription" placeholder="Eingeben">
+        <button class="prime-btn btn-submit" v-on:click="setCurrentDescription(currentCustomDescription)"><b>ÜBERNEHMEN</b></button>
+        <div class="prime-btn custom-output">{{ this.currentDescription }}</div>
+        <button class="prime-btn btn-delete" v-on:click="deleteCurrentDescription()"><b>LÖSCHEN</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState('package')"><b>WEITER</b></button>
+      </b-col>
+      <b-col class="card c-right" v-show="this.viewState === 'package'" style="border-radius: 5px">
+        <div class="step-title"><h5>Originalverpackung</h5></div>
+        <div class="spacer-s"></div>
+        <button class="prime-btn btn-green" v-on:click="setCurrentPackage('Neuwertig')"><b>Neuwertig</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentPackage('Leicht beschädigt')"><b>Leicht beschädigt</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Stark beschädigt')"><b>Stark beschädigt</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Nicht vorhanden')"><b>Nicht vorhanden</b></button>
+      </b-col>
+      <b-col class="card c-right" v-show="this.viewState === 'description'" style="border-radius: 5px">
+        <div class="step-title"><h5>Zustandsbeschreibung</h5></div>
+        <div class="spacer-s"></div>
+        <button class="prime-btn btn-green" v-on:click="setCurrentAccess('Neuwertig')"><b>Neuwertig</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Leichte Gebrauchsspuren')"><b>Leichte Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Kleine Kratzer')"><b>Kleine Kratzer</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Starke Gebrauchsspuren')"><b>Starke Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Grosse Kratzer')"><b>Grosse Kratzer</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Nicht auf Funktion überprüft')"><b>Nicht auf Funktion überprüft</b></button>
+        <input class="prime-btn custom-input" v-model="currentCustomAccess" placeholder="Eingeben">
+        <button class="prime-btn btn-submit" v-on:click="setCurrentAccess(currentCustomAccess)"><b>ÜBERNEHMEN</b></button>
+        <div class="prime-btn custom-output">{{ this.currentAccess }}</div>
+        <button class="prime-btn btn-delete" v-on:click="deleteCurrentAccess()"><b>LÖSCHEN</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState('confirm')"><b>WEITER</b></button>
       </b-col>
     </b-row>
   </div>
@@ -78,22 +121,85 @@ export default {
   data() {
     return {
       viewState: 'location',
+      currentDealBox: '',
+      currentCheckBox: '',
+      currentStockBox: '',
       selectedProduct: '',
       currentLocation: '',
       currentCondition: '',
+      currentDescription: '',
       currentDescriptionValue: '',
+      currentCustomDescription: '',
       currentPackage: '',
+      currentAccess: '',
       currentAccessValue: '',
+      currentCustomAccess: '',
       currentArrayDescription: [],
       currentArrayAccess: []
     }
   },
   methods: {
-    changeViewState: function (state) {
+    setCurrentDealBox: function (dealBox) {
+
+    },
+    setCurrentCheckBox: function (checkBox) {
+
+    },
+    setCurrentStockBox: function (stockBox) {
+
+    },
+    changeToNextViewState: function (state) {
       this.viewState = state;
     },
     setCurrentLocation: function (location) {
-
+      this.currentLocation = location;
+      this.changeToNextViewState('condition');
+      console.log("Location: " + this.currentLocation + " | View State: " + this.viewState)
+    },
+    setCurrentCondition: function (condition) {
+      this.currentCondition = condition;
+      this.changeToNextViewState('description');
+      console.log("Zustand: " + this.currentCondition + " | View State: " + this.viewState)
+    },
+    setCurrentDescription: function (description) {
+      if (description !== '') {
+        this.currentDescriptionValue = "";
+        this.currentArrayDescription.push(description);
+        for (var i = 0; i < this.currentArrayDescription.length; i++) {
+          if (this.currentArrayDescription[i] != null) {
+            this.currentDescriptionValue = this.currentDescriptionValue + this.currentArrayDescription[i] + ", ";
+          }
+        }
+        this.currentDescription = this.currentDescriptionValue.slice(0, -2);
+        this.currentCustomDescription = "";
+      }
+      console.log("Beschreibung: " + this.currentDescription)
+    },
+    deleteCurrentDescription: function () {
+      this.currentDescription = "";
+      this.currentArrayDescription = [];
+    },
+    setCurrentPackage: function (pack) {
+      this.currentPackage = pack;
+      this.changeToNextViewState('access')
+    },
+    setCurrentAccess: function (access) {
+      if (access !== '') {
+        this.currentAccessValue = "";
+        this.currentArrayAccess.push(access);
+        for (var i = 0; i < this.currentArrayAccess.length; i++) {
+          if (this.currentArrayAccess[i] != null) {
+            this.currentAccessValue = this.currentAccessValue + this.currentArrayAccess[i] + ", ";
+          }
+        }
+        this.currentAccess = this.currentAccessValue.slice(0, -2);
+        this.currentCustomAccess = "";
+      }
+      console.log("Beschreibung: " + this.currentDescription)
+    },
+    deleteCurrentAccess: function () {
+      this.currentAccess = "";
+      this.currentArrayAccess = [];
     }
   }
 }
@@ -111,6 +217,35 @@ export default {
 
 .spacer-l {
   height: 50px;
+}
+
+.box-link {
+  padding: 10px 10px 10px 10px;
+  height:52px;
+  width: 240px;
+  align-items: center;
+  border-radius: 7px;
+  background-color: white;
+  margin: 10px 5px 0 5px;
+  box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);
+}
+
+.deal {
+  border-width: 1px;
+  border-color: #05D68F;
+  border-style: solid;
+}
+
+.check {
+  border-width: 1px;
+  border-color: #FFAA01;
+  border-style: solid;
+}
+
+.stock {
+  border-width: 1px;
+  border-color: #FD3D71;
+  border-style: solid;
 }
 
 .box-input {
@@ -135,17 +270,6 @@ export default {
   font-size: 10px;
   height: 32px;
 }
-
-.box-link {
-  padding: 10px 10px 10px 10px;
-  height:52px;
-  align-items: center;
-  border-radius: 7px;
-  background-color: white;
-  margin: 0 5px 0 5px;
-  box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);
-}
-
 
 .p-element-layout {
   width: 80%;
@@ -225,6 +349,37 @@ export default {
 
 .btn-red {
   background-color: #FD3D71;
+}
+
+.btn-delete {
+  background-color: white;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #FD3D71;
+  color: #FD3D71;
+}
+
+.btn-submit {
+  background-color: white;
+  border-width: 2px;
+  border-style: solid;
+  border-color: dodgerblue;
+  color: dodgerblue;
+}
+
+.custom-input {
+  border-width: 2px;
+  border-color: dodgerblue;
+  padding-left: 10px;
+  color: black
+;
+}
+
+.custom-output {
+  background-color: whitesmoke;
+  border-radius: 5px;
+  color: black;
+  font-size: 12px;
 }
 
 .search-bar {
