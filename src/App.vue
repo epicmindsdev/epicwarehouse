@@ -23,7 +23,7 @@
 
 .navigation {
   width: 100%;
-  padding: 30px 10%;
+  padding: 20px 10% 20px 10%;
   background-color: white;
   text-align: left;
   box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);

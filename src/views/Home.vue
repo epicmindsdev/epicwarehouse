@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <HelloWorld msg=""/>
+    <label class="box-link">Dealbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link">Checkbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link">Stockbox Nr. 3 <input class="box-input" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
     <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
       <button class="btn-back"><b><b>ZURÜCK</b></b></button>
     </b-row>
@@ -52,10 +55,10 @@
           </b-tabs>
         </div>
       </b-col>
-      <b-col class="card c-right" style="border-radius: 5px">
+      <b-col class="card c-right" v-if="this.viewState === 'location'" style="border-radius: 5px">
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
-        <button class="prime-btn btn-green" v-on:click=""><b>Dealbox</b></button>
+        <button class="prime-btn btn-green" v-on:click="changeViewState('condition')"><b>Dealbox</b></button>
         <button class="prime-btn btn-yellow" v-on:click=""><b>Checkbox</b></button>
         <button class="prime-btn btn-red" v-on:click=""><b>Stockbox</b></button>
       </b-col>
@@ -71,6 +74,27 @@ export default {
   name: 'Home',
   components: {
     HelloWorld
+  },
+  data() {
+    return {
+      viewState: 'location',
+      selectedProduct: '',
+      currentLocation: '',
+      currentCondition: '',
+      currentDescriptionValue: '',
+      currentPackage: '',
+      currentAccessValue: '',
+      currentArrayDescription: [],
+      currentArrayAccess: []
+    }
+  },
+  methods: {
+    changeViewState: function (state) {
+      this.viewState = state;
+    },
+    setCurrentLocation: function (location) {
+
+    }
   }
 }
 </script>
@@ -88,6 +112,40 @@ export default {
 .spacer-l {
   height: 50px;
 }
+
+.box-input {
+  width: 45px;
+  text-align: center;
+  font-size: 10px;
+  height: auto;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #3ABEFF;
+  border-radius: 4px;
+  margin-left: 5px;
+}
+
+.box-input-enter {
+  border-width: 0;
+  background-color: white;
+  width: 45px;
+  text-align: center;
+  font-size: 10px;
+  height: 32px;
+}
+
+.box-link {
+  padding: 10px 10px 10px 10px;
+  height:52px;
+  align-items: center;
+  border-radius: 7px;
+  background-color: white;
+  margin: 0 5px 0 5px;
+  box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);
+}
+
 
 .p-element-layout {
   width: 80%;
@@ -154,6 +212,7 @@ export default {
   border-width: 0;
   color: white;
   height: 45px;
+  font-size: 18px;
 }
 
 .btn-green {
@@ -205,8 +264,11 @@ export default {
   font-size: 18px;
   height: 45px;
   min-width: 100%;
-  padding: 10px 10px 10px 20px;
+  padding: 10px 10px 10px 45px;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
+  background-image: url(https://morfalto.sirv.com/suchen-2.png?w=18&h=18);
+  background-position: 15px center;
+  background-repeat: no-repeat;
 }
 
 .btn-input-top {
