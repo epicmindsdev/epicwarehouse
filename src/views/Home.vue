@@ -2,10 +2,10 @@
   <div class="home">
     <!--<HelloWorld msg=""/>-->
     <!-- setting box values -->
-    <label class="box-link deal">Dealbox 3 <input class="box-input deal" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link check">Checkbox 13 <input class="box-input check" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link stock">Stockbox 23 <input class="box-input stock" placeholder="Ändern"><button class="box-input-enter"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <!-- back button -->
+    <label class="box-link deal">{{ currentDealBox }} <input class="box-input deal" v-model="currentDealBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentDealBox(currentDealBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link check">{{ currentCheckBox }} <input class="box-input check" v-model="currentCheckBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentCheckBox(currentCheckBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+    <label class="box-link stock">{{ currentStockBox }} <input class="box-input stock" v-model="currentStockBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentStockBox(currentStockBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
+  <!-- back button -->
     <b-row class="p-element-layout" v-show="this.viewState !== 1" style="margin-left: auto; margin-right: auto">
       <button class="btn-back" v-on:click="changeToPreviousViewState()"><b><b>ZURÜCK</b></b></button>
     </b-row>
@@ -63,9 +63,9 @@
       <b-col class="card c-right" v-show="this.viewState === 1" style="border-radius: 5px">
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
-        <button class="prime-btn btn-green" v-on:click="setCurrentLocation('DEALBOX')"><b>Dealbox</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation('CHECKBOX')"><b>Checkbox</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentLocation('STOCKBOX')"><b>Stockbox</b></button>
+        <button class="prime-btn btn-green" v-on:click="setCurrentLocation(currentDealBox)" :disabled="currentDealBox === ''"><b> <a v-show="currentDealBox === ''">Dealbox eingeben</a> {{ currentDealBox }}</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation(currentCheckBox)" :disabled="currentCheckBox === ''"><b> <a v-show="currentCheckBox === ''">Checkbox eingeben</a> {{ currentCheckBox }}</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentLocation(currentStockBox)" :disabled="currentStockBox === ''"><b> <a v-show="currentStockBox === ''">Stockbox eingeben</a> {{ currentStockBox }}</b></button>
       </b-col>
       <!-- Condition -->
       <b-col class="card c-right" v-show="this.viewState === 2" style="border-radius: 5px">
@@ -140,8 +140,11 @@ export default {
   data() {
     return {
       viewState: 1, // 1: Location
+      currentDealBoxValue: '',
       currentDealBox: '',
+      currentCheckBoxValue: '',
       currentCheckBox: '',
+      currentStockBoxValue: '',
       currentStockBox: '',
       selectedProduct: '',
       currentLocation: '',
@@ -159,13 +162,25 @@ export default {
   },
   methods: {
     setCurrentDealBox: function (dealBox) {
-
+      if (dealBox !== "") {
+        this.currentDealBox = "DEALBOX " + dealBox;
+        this.currentDealBoxValue = "";
+        console.log(this.currentDealBox)
+      }
     },
     setCurrentCheckBox: function (checkBox) {
-
+      if (checkBox !== "") {
+        this.currentCheckBox = "CHECKBOX " + checkBox;
+        this.currentCheckBoxValue = "";
+        console.log(this.currentCheckBox)
+      }
     },
     setCurrentStockBox: function (stockBox) {
-
+      if (stockBox !== "") {
+        this.currentStockBox = "STOCKBOX " + stockBox;
+        this.currentStockBoxValue = "";
+        console.log(this.currentStockBox)
+      }
     },
     changeToNextViewState: function (state) {
       this.viewState = state;
@@ -359,6 +374,10 @@ export default {
   color: white;
   height: 45px;
   font-size: 18px;
+}
+
+.prime-btn:disabled {
+  opacity: 0.6;
 }
 
 .btn-green {
