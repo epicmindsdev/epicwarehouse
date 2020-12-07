@@ -7,7 +7,7 @@
     <label class="box-link stock">{{ currentStockBox }} <input class="box-input stock" v-model="currentStockBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentStockBox(currentStockBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
   <!-- back button -->
     <b-row class="p-element-layout" v-show="this.viewState !== 1" style="margin-left: auto; margin-right: auto">
-      <button class="btn-back" v-on:click="changeToPreviousViewState()"><b><b>ZURÜCK</b></b></button>
+      <button class="btn-back" v-on:click="changeToPreviousViewState()"><b>ZURÜCK</b></button>
     </b-row>
     <!-- ID search bar -->
     <b-row class="p-element-layout" v-show="this.viewState === 1" style="margin-left: auto; margin-right: auto">
@@ -17,10 +17,10 @@
       </label>
     </b-row>
     <!-- product check -->
-    <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
+    <b-row class="p-element-layout" v-show="this.selectedProduct !== ''" style="margin-left: auto; margin-right: auto">
       <!-- ProductDetails -->
       <b-col class="card c-left" v-show="this.viewState !== 6" style="border-radius: 5px">
-        <div class="p-title"><h5>{{ this.selectedProduct.name }}</h5></div>
+        <div class="p-title"><h5>{{ this.selectedProduct.title }}</h5></div>
         <div class="spacer-s"></div>
         <div class="p-price">€ {{ this.selectedProduct.price }}</div>
         <div class="spacer-m"></div>
@@ -28,31 +28,31 @@
           <b-tabs>
             <b-tab class="img-tab" title="1" active>
               <div class="p-images"><img class="p-image-item"
-                                         :src=this.selectedProduct.image1
+                                         :src=this.selectedProduct.image_link
                                          alt="image1">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="2" active>
               <div class="p-images"><img class="p-image-item"
-                                         :src=this.selectedProduct.image2
+                                         :src=this.selectedProduct.additional_image1
                                          alt="image2">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="3" active>
               <div class="p-images"><img class="p-image-item"
-                                         :src=this.selectedProduct.image3
+                                         :src=this.selectedProduct.additional_image2
                                          alt="image3">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="4" active>
               <div class="p-images"><img class="p-image-item"
-                                         :src=this.selectedProduct.image4
+                                         :src=this.selectedProduct.additional_image3
                                          alt="image4">
               </div>
             </b-tab>
             <b-tab class="img-tab" title="5" active>
               <div class="p-images"><img class="p-image-item"
-                                         :src=this.selectedProduct.image5
+                                         :src=this.selectedProduct.additional_image5
                                          alt="image5">
               </div>
             </b-tab>
@@ -121,8 +121,9 @@
         <div class="spacer-s"></div>
         <table>
           <tr><th>Id</th><th>Location</th><th>Zustand</th><th>Beschreibung</th><th>Verpackung</th><th>Zubehör</th></tr>
-          <tr><td>{{  }}</td><td>{{  }}</td><td>{{  }}</td><td>{{  }}</td><td>{{  }}</td><td>{{  }}</td></tr>
+          <tr><td>{{ this.selectedProduct.id }}</td><td>{{ this.selectedProduct.location }}</td><td>{{ this.selectedProduct.zustand }}</td><td>{{ this.selectedProduct.zustandsbeschreibung }}</td><td>{{ this.selectedProduct.originalverpackung }}</td><td>{{ this.selectedProduct.zubehoer }}</td></tr>
         </table>
+        <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
   </div>
@@ -132,6 +133,7 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import axios from "axios";
+import moment from 'moment'
 
 export default {
   name: 'Home',
@@ -159,7 +161,8 @@ export default {
       currentAccessValue: '',
       currentCustomAccess: '',
       currentArrayDescription: [],
-      currentArrayAccess: []
+      currentArrayAccess: [],
+      timeStamp: ''
     }
   },
   methods: {
@@ -168,7 +171,27 @@ export default {
       this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
         console.log(response.data)
         this.selectedProduct = response.data[0];
+        console.log("Aus Stammdaten 1")
       })
+    },
+    pushSelectedProduct: function () {
+      this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
+      console.log(this.timeStamp)
+      this.selectedProduct.location = this.currentLocation;
+      this.selectedProduct.zustand = this.currentCondition;
+      this.selectedProduct.zustandsbeschreibung = this.currentDescription;
+      this.selectedProduct.originalverpackung = this.currentPackage;
+      this.selectedProduct.zubehoer = this.currentAccess;
+      this.selectedProduct.erfasst = this.timeStamp;
+      const headers = {
+        "Content-Type": "application/json"
+      };
+      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, { headers })
+          .then(response => console.log(response))
+          .catch(error => {
+            this.errorMessage = error.message;
+            console.log("There was an error!", error);
+          });
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
@@ -241,7 +264,7 @@ export default {
         this.currentAccess = this.currentAccessValue.slice(0, -2);
         this.currentCustomAccess = "";
       }
-      console.log("Beschreibung: " + this.currentDescription)
+      console.log("Zubehoer: " + this.currentAccess)
     },
     deleteCurrentAccess: function () {
       this.currentAccess = "";
@@ -415,6 +438,15 @@ export default {
   border-style: solid;
   border-color: dodgerblue;
   color: dodgerblue;
+}
+
+.btn-confirm {
+  margin-top: 10px;
+  color: white;
+  background-color: #3ABEFF;
+  border-color: #3ABEFF;
+  border-radius: 4px;
+  height: 45px;
 }
 
 .btn-submit:disabled {

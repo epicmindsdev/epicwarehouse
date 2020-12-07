@@ -2,7 +2,7 @@
   <div id="app">
     <nav class="navigation">
       <img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="200px" height="auto">
-      <router-link class="link" to="/">Product check</router-link> |
+      <router-link class="link" to="/">Product check</router-link>
       <router-link class="link" to="/about">Overview</router-link>
     </nav>
     <router-view/>
@@ -35,7 +35,25 @@
 
 .link {
   align-content: center;
-  padding: 20px 20px 20px 20px;
+  padding: 6px 6px 6px 6px;
+  border-radius: 4px;
+  border-color: white;
+  margin-left: 10px;
+  color: black;
+  font-family: "Candara Light";
+  border-width: 1px;
+  border-style: solid;
 }
+
+.link:active {
+  border-color: #3ABEFF;
+}
+
+.link:focus {
+  border-color: #3ABEFF;
+  color: black;
+  text-decoration-line: none;
+}
+
 
 </style>

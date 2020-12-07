@@ -6,9 +6,14 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueMoment from 'vue-moment'
+import moment from 'moment'
 
 Vue.use(BootstrapVue)
 Vue.use(VueAxios, axios)
+Vue.use(VueMoment, {
+  moment,
+})
 
 Vue.config.productionTip = false
 
