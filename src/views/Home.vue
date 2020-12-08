@@ -1,11 +1,23 @@
 <template>
   <div class="home">
-    <!--<HelloWorld msg=""/>-->
+    <!--<Order msg=""/>-->
     <!-- setting box values -->
-    <label class="box-link deal">{{ currentDealBox }} <input class="box-input deal" v-model="currentDealBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentDealBox(currentDealBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link check">{{ currentCheckBox }} <input class="box-input check" v-model="currentCheckBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentCheckBox(currentCheckBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-    <label class="box-link stock">{{ currentStockBox }} <input class="box-input stock" v-model="currentStockBoxValue" placeholder="Ändern"><button class="box-input-enter" v-on:click="setCurrentStockBox(currentStockBoxValue)"><img src="https://morfalto.sirv.com/back.png?w=128&h=17"></button></label>
-  <!-- back button -->
+    <label class="box-link deal">{{ currentDealBox }} <input class="box-input deal" v-model="currentDealBoxValue"
+                                                             placeholder="Ändern">
+      <button class="box-input-enter" v-on:click="setCurrentDealBox(currentDealBoxValue)"><img
+          src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
+    </label>
+    <label class="box-link check">{{ currentCheckBox }} <input class="box-input check" v-model="currentCheckBoxValue"
+                                                               placeholder="Ändern">
+      <button class="box-input-enter" v-on:click="setCurrentCheckBox(currentCheckBoxValue)"><img
+          src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
+    </label>
+    <label class="box-link stock">{{ currentStockBox }} <input class="box-input stock" v-model="currentStockBoxValue"
+                                                               placeholder="Ändern">
+      <button class="box-input-enter" v-on:click="setCurrentStockBox(currentStockBoxValue)"><img
+          src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
+    </label>
+    <!-- back button -->
     <b-row class="p-element-layout" v-show="this.viewState !== 1" style="margin-left: auto; margin-right: auto">
       <button class="btn-back" v-on:click="changeToPreviousViewState()"><b>ZURÜCK</b></button>
     </b-row>
@@ -32,25 +44,25 @@
                                          alt="image1">
               </div>
             </b-tab>
-            <b-tab class="img-tab" title="2" active>
+            <b-tab class="img-tab" title="2">
               <div class="p-images"><img class="p-image-item"
                                          :src=this.selectedProduct.additional_image1
                                          alt="image2">
               </div>
             </b-tab>
-            <b-tab class="img-tab" title="3" active>
+            <b-tab class="img-tab" title="3">
               <div class="p-images"><img class="p-image-item"
                                          :src=this.selectedProduct.additional_image2
                                          alt="image3">
               </div>
             </b-tab>
-            <b-tab class="img-tab" title="4" active>
+            <b-tab class="img-tab" title="4">
               <div class="p-images"><img class="p-image-item"
                                          :src=this.selectedProduct.additional_image3
                                          alt="image4">
               </div>
             </b-tab>
-            <b-tab class="img-tab" title="5" active>
+            <b-tab class="img-tab" title="5">
               <div class="p-images"><img class="p-image-item"
                                          :src=this.selectedProduct.additional_image5
                                          alt="image5">
@@ -63,9 +75,15 @@
       <b-col class="card c-right" v-show="this.viewState === 1" style="border-radius: 5px">
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
-        <button class="prime-btn btn-green" v-on:click="setCurrentLocation(currentDealBox)" :disabled="currentDealBox === ''"><b> <a v-show="currentDealBox === ''">Dealbox eingeben</a> {{ currentDealBox }}</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation(currentCheckBox)" :disabled="currentCheckBox === ''"><b> <a v-show="currentCheckBox === ''">Checkbox eingeben</a> {{ currentCheckBox }}</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentLocation(currentStockBox)" :disabled="currentStockBox === ''"><b> <a v-show="currentStockBox === ''">Stockbox eingeben</a> {{ currentStockBox }}</b></button>
+        <button class="prime-btn btn-green" v-on:click="setCurrentLocation(currentDealBox)"
+                :disabled="currentDealBox === ''"><b> <a v-show="currentDealBox === ''">Dealbox eingeben</a>
+          {{ currentDealBox }}</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation(currentCheckBox)"
+                :disabled="currentCheckBox === ''"><b> <a v-show="currentCheckBox === ''">Checkbox eingeben</a>
+          {{ currentCheckBox }}</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentLocation(currentStockBox)"
+                :disabled="currentStockBox === ''"><b> <a v-show="currentStockBox === ''">Stockbox eingeben</a>
+          {{ currentStockBox }}</b></button>
       </b-col>
       <!-- Condition -->
       <b-col class="card c-right" v-show="this.viewState === 2" style="border-radius: 5px">
@@ -79,49 +97,79 @@
         <div class="step-title"><h5>Zustandsbeschreibung</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentDescription('Neuwertig')"><b>Neuwertig</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Leichte Gebrauchsspuren')"><b>Leichte Gebrauchsspuren</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Kleine Kratzer')"><b>Kleine Kratzer</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Starke Gebrauchsspuren')"><b>Starke Gebrauchsspuren</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Grosse Kratzer')"><b>Grosse Kratzer</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Nicht auf Funktion überprüft')"><b>Nicht auf Funktion überprüft</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Leichte Gebrauchsspuren')"><b>Leichte
+          Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentDescription('Kleine Kratzer')"><b>Kleine Kratzer</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Starke Gebrauchsspuren')"><b>Starke
+          Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Grosse Kratzer')"><b>Grosse Kratzer</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentDescription('Nicht auf Funktion überprüft')"><b>Nicht
+          auf Funktion überprüft</b></button>
         <input class="prime-btn custom-input" v-model="currentCustomDescription" placeholder="Eingeben">
-        <button class="prime-btn btn-submit" v-on:click="setCurrentDescription(currentCustomDescription)"><b>ÜBERNEHMEN</b></button>
+        <button class="prime-btn btn-submit" v-on:click="setCurrentDescription(currentCustomDescription)">
+          <b>ÜBERNEHMEN</b></button>
         <div class="prime-btn custom-output">{{ this.currentDescription }}</div>
         <button class="prime-btn btn-delete" v-on:click="deleteCurrentDescription()"><b>LÖSCHEN</b></button>
-        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(4)" :disabled="this.currentDescription === ''"><b>WEITER</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(4)"
+                :disabled="this.currentDescription === ''"><b>WEITER</b></button>
       </b-col>
       <!-- Package -->
       <b-col class="card c-right" v-show="this.viewState === 4" style="border-radius: 5px">
         <div class="step-title"><h5>Originalverpackung</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentPackage('Neuwertig')"><b>Neuwertig</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentPackage('Leicht beschädigt')"><b>Leicht beschädigt</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Stark beschädigt')"><b>Stark beschädigt</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Nicht vorhanden')"><b>Nicht vorhanden</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentPackage('Leicht beschädigt')"><b>Leicht
+          beschädigt</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Stark beschädigt')"><b>Stark beschädigt</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentPackage('Nicht vorhanden')"><b>Nicht vorhanden</b>
+        </button>
       </b-col>
       <!-- Accessories -->
       <b-col class="card c-right" v-show="this.viewState === 5" style="border-radius: 5px">
         <div class="step-title"><h5>Zubehör vollständig</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentAccess('Neuwertig')"><b>Neuwertig</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Leichte Gebrauchsspuren')"><b>Leichte Gebrauchsspuren</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Kleine Kratzer')"><b>Kleine Kratzer</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Starke Gebrauchsspuren')"><b>Starke Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Leichte Gebrauchsspuren')"><b>Leichte
+          Gebrauchsspuren</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Kleine Kratzer')"><b>Kleine Kratzer</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Starke Gebrauchsspuren')"><b>Starke
+          Gebrauchsspuren</b></button>
         <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Grosse Kratzer')"><b>Grosse Kratzer</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Nicht auf Funktion überprüft')"><b>Nicht auf Funktion überprüft</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Nicht auf Funktion überprüft')"><b>Nicht auf
+          Funktion überprüft</b></button>
         <input class="prime-btn custom-input" v-model="currentCustomAccess" placeholder="Eingeben">
-        <button class="prime-btn btn-submit" v-on:click="setCurrentAccess(currentCustomAccess)"><b>ÜBERNEHMEN</b></button>
+        <button class="prime-btn btn-submit" v-on:click="setCurrentAccess(currentCustomAccess)"><b>ÜBERNEHMEN</b>
+        </button>
         <div class="prime-btn custom-output">{{ this.currentAccess }}</div>
         <button class="prime-btn btn-delete" v-on:click="deleteCurrentAccess()"><b>LÖSCHEN</b></button>
-        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(6)" :disabled="this.currentAccess === ''"><b>WEITER</b></button>
+        <button class="prime-btn btn-submit" v-on:click="changeToNextViewState(6)"
+                :disabled="this.currentAccess === ''"><b>WEITER</b></button>
       </b-col>
       <!-- Confirmation -->
       <b-col class="card" v-show="this.viewState === 6" style="border-radius: 5px">
         <div class="step-title"><h5>Bestätigen</h5></div>
         <div class="spacer-s"></div>
         <table>
-          <tr><th>Id</th><th>Location</th><th>Zustand</th><th>Beschreibung</th><th>Verpackung</th><th>Zubehör</th></tr>
-          <tr><td>{{ this.selectedProduct.id }}</td><td>{{ this.selectedProduct.location }}</td><td>{{ this.selectedProduct.zustand }}</td><td>{{ this.selectedProduct.zustandsbeschreibung }}</td><td>{{ this.selectedProduct.originalverpackung }}</td><td>{{ this.selectedProduct.zubehoer }}</td></tr>
+          <tr>
+            <th>Id</th>
+            <th>Location</th>
+            <th>Zustand</th>
+            <th>Beschreibung</th>
+            <th>Verpackung</th>
+            <th>Zubehör</th>
+          </tr>
+          <tr>
+            <td>{{ this.selectedProduct.id }}</td>
+            <td>{{ this.selectedProduct.location }}</td>
+            <td>{{ this.selectedProduct.zustand }}</td>
+            <td>{{ this.selectedProduct.zustandsbeschreibung }}</td>
+            <td>{{ this.selectedProduct.originalverpackung }}</td>
+            <td>{{ this.selectedProduct.zubehoer }}</td>
+          </tr>
         </table>
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
@@ -131,7 +179,7 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from '@/components/Order.vue'
 import axios from "axios";
 import moment from 'moment'
 
@@ -168,11 +216,29 @@ export default {
   methods: {
     getProductById: function (id) {
       console.log(id);
+
       this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        console.log(response.data)
-        this.selectedProduct = response.data[0];
-        console.log("Aus Stammdaten 1")
+        if (response.data.length === 1) {
+          console.log(response.data)
+          console.log("Daten in Stammdaten 1 gefunden")
+          this.selectedProduct = response.data[0];
+          this.selectedProduct.orderid = 1;
+        }
+      }).catch((error) => {
+        console.log(error)
       })
+
+      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten-2/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
+        if (response.data.length === 1) {
+          console.log(response.data)
+          console.log("Daten in Stammdaten 2 gefunden")
+          this.selectedProduct = response.data[0];
+          this.selectedProduct.orderid = 2;
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
@@ -186,7 +252,7 @@ export default {
       const headers = {
         "Content-Type": "application/json"
       };
-      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, { headers })
+      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, {headers})
           .then(response => console.log(response))
           .catch(error => {
             this.errorMessage = error.message;
@@ -290,13 +356,13 @@ export default {
 
 .box-link {
   padding: 10px 10px 10px 10px;
-  height:52px;
+  height: 52px;
   width: 240px;
   align-items: center;
   border-radius: 7px;
   background-color: white;
   margin: 10px 5px 0 5px;
-  box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);
+  box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
 }
 
 .deal {
@@ -458,8 +524,7 @@ export default {
   border-width: 2px;
   border-color: dodgerblue;
   padding-left: 10px;
-  color: black
-;
+  color: black;
 }
 
 .custom-output {
