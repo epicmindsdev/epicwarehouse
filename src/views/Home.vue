@@ -174,6 +174,7 @@
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
+    <button v-on:click="test()">CLICK</button>
   </div>
 </template>
 
@@ -214,6 +215,14 @@ export default {
     }
   },
   methods: {
+    test: function () {
+      this.$gapi.$getGapiClient().then((gapi) => {
+        console.log('hallo')
+        // gapi.sheets.spreadsheet.get(...)
+        // ...
+      })
+    },
+
     getProductById: function (id) {
       console.log(id);
 
