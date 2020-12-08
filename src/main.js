@@ -8,14 +8,13 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import VueMoment from 'vue-moment'
 import moment from 'moment'
-import firebase from 'firebase'
 
 Vue.use(BootstrapVue)
 Vue.use(VueAxios, axios)
 Vue.use(VueMoment, {
   moment,
 })
-Vue.use(firebase)
+
 
 Vue.config.productionTip = false
 

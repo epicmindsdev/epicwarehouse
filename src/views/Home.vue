@@ -164,11 +164,11 @@
           </tr>
           <tr>
             <td>{{ this.selectedProduct.id }}</td>
-            <td>{{ this.selectedProduct.location }}</td>
-            <td>{{ this.selectedProduct.zustand }}</td>
-            <td>{{ this.selectedProduct.zustandsbeschreibung }}</td>
-            <td>{{ this.selectedProduct.originalverpackung }}</td>
-            <td>{{ this.selectedProduct.zubehoer }}</td>
+            <td>{{ this.currentLocation }}</td>
+            <td>{{ this.currentCondition }}</td>
+            <td>{{ this.currentDescription }}</td>
+            <td>{{ this.currentPackage }}</td>
+            <td>{{ this.currentAccess }}</td>
           </tr>
         </table>
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
@@ -179,14 +179,14 @@
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/Order.vue'
+import Order from '@/components/Order.vue'
 import axios from "axios";
 import moment from 'moment'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    Order
   },
   data() {
     return {
@@ -222,7 +222,6 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 1 gefunden")
           this.selectedProduct = response.data[0];
-          this.selectedProduct.orderid = 1;
         }
       }).catch((error) => {
         console.log(error)
@@ -233,12 +232,10 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 2 gefunden")
           this.selectedProduct = response.data[0];
-          this.selectedProduct.orderid = 2;
         }
       }).catch((error) => {
         console.log(error)
       })
-
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
@@ -254,10 +251,7 @@ export default {
       };
       axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, {headers})
           .then(response => console.log(response))
-          .catch(error => {
-            this.errorMessage = error.message;
-            console.log("There was an error!", error);
-          });
+
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
