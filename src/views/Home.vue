@@ -216,11 +216,22 @@ export default {
   },
   methods: {
     test: function () {
-      this.$gapi.$getGapiClient().then((gapi) => {
-        console.log('hallo')
-        // gapi.sheets.spreadsheet.get(...)
-        // ...
+
+      const headers = {
+        "Authorization": "v^1.1#i^1#p^1#I^3#r^0#f^0#t^H4sIAAAAAAAAAOVYfWwURRTv9UsqICSimKrJsZUQbe5udq/3tXAXjl5rj9L27F1rWzAwuzvbbru3u+zM2Z4GU89QjDHCHxgiaiiBfyAYhMSEaCIIQQkJBgJoBFFAY/AjKIVIAiru3h3lWkmL9IJN3H/u5r03b977/d6bmV3QX1r21EDdwNXplvsKB/tBf6HFQk8FZaUllQ8UFZaXFIAcA8tg/xP9xamiCwswjMsa24ywpioYWfvisoLZtNBPJXSFVSGWMKvAOMIs4dlosGEJy9gBq+kqUXlVpqzhkJ/ioOgTfQLwMUB0eZHHkCo3fcZUP8VAF+P1Ap8P8hyNaJehxziBwgomUCGGHjDARjM2mo7RNEu7WcZt9zjpDsrainQsqYphYgdUIB0um56r58Q6dqgQY6QTwwkVCAdro03BcKimMbbAkeMrkMUhSiBJ4JGjalVA1lYoJ9DYy+C0NRtN8DzCmHIEMiuMdMoGbwZzF+GnofZ4PC63CzgZD+dFogDyAmWtqschGTsOUyIJNjFtyiKFSCQ5HqIGGlw34kl21Gi4CIes5s8zCShLooR0P1WzKNgejESoANIkPi4pgs380wt1ZIs0h2xVosfr4hmXIRY9HoQQnV0o4y0L86iVqlVFkEzQsLVRJYuQETUajQ3IwcYwalKa9KBIzIhy7ZxZDN2A6TBJzbCYIF2KySuKG0BY08PxGRieTYgucQmChj2MVqQh8lNQ0ySBGq1M12K2fPqwn+oiRGMdjt7eXnuv067qnQ4GANrR1rAkynehOKQMW7PXM/bS+BNsUjoVHhkzscSSpGbE0mfUqhGA0kkFqhifl6nK4j4yrMBo6T8EOTk7RnZEvjqEZnjO60LOKlpwV4lQzEeHBLJF6jDjQBxM2uJQ70FEkyGPbLxRZ4k40iWBdbpExukVkU1w+0RblU8UbZxLcNtoESGAEMfxPu//qVHutNSjiNcRyUut563OOdTeWt3X522siq30tNXjzq7FvmANbG3pFlZ6muVIiHO29sS7KuX6Tv+ddsPtk+dVDUVUWeKTeUDA7PU8ouDUhQjUSTKKZNkQTChRbCY6uUg252PDAdQku9nYdl6NO1Ro7OimaHk64gnlHNS0cDyeIJCTUTg/u/l/tJPfNj3JuOtMqpwM/jJESkLmkmJPs2nHz/N2HWE1oRv3M3uTeWbH1B6kGDsg0VVZRnorPWGi7zW/Zq+Pg8e/PCzuLvf83VQmU23zsmSU0PLJltk9YVSCk+w0pt3A4/a6nF73hPKqTnMaS062c6hOxQQJY6VW/PRdXqsdI1/yAwXph05ZPgApy65CiwU4wFy6AswpLWopLppWjiWC7BIU7VjqVIx3Vx3Ze1BSg5JeWGrRWuBPc3M+Kww+Bx4Z/rBQVkRPzfnKAB67pSmhZ8yezgCaoc3Hzbg7QMUtbTH9cPGs+I3UuaKjdXhNZMm7Z8+EBzYOld8A04eNLJaSguKUpSCwYtuewcNt+39L7YXEF921tP/n1Vvnf31x9cDxKd91n/zi9PU3dwzVXH1n4aEy+ejhzzvuv7ys7Y+K3RXzyY9vffpRYf2lpZf3r3vQR+kXtzBbNg84zrUwv287f6Jl2dS9pTNeX/j+zgNhfp/85VDt6aK3r/y5ef2BLYc+WbWzf9Mu90vl++umdfe0npi3fE/ThlP0tdXczJevg84Vf5189JeFa18JhdTz3y6Y+cPGOZb2115YOaSVNG5qWbfm+w+bAwf9s9tLXuR3bk+h3Z4jVMOZ9w6G1Wd37LtUv/jSuYeW1f8ae7JvVeU13wbu1FfXPtv+xtmPo4XfPH688kLXkVl1U65uvXLw2OCx9atqG16dl6Hvb/CNNZrwEQAA",
+        "X-EBAY-C-MARKETPLACE-ID": "EBAY_DE",
+        "Content-Type": "application/json",
+        "ACCEPT": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Vary": "Origin"
+      };
+
+      this.axios.get('https://api.ebay.com/offer?sku=LPNHE179153041', {headers}).then((response) => {
+        console.log(response.data)
+        console.log("Ebay API Call made")
       })
+
+
     },
 
     getProductById: function (id) {
