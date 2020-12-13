@@ -2,18 +2,21 @@
   <div class="home">
     <!--<Order msg=""/>-->
     <!-- setting box values -->
-    <label class="box-link deal">{{ currentDealBox }} <input class="box-input deal" v-model="currentDealBoxValue"
-                                                             placeholder="Ändern">
+    <label class="box-link deal"><a v-if="currentDealBox === ''">Enter Dealbox</a> {{ currentDealBox }} <input
+        type="number" class="box-input deal" v-model="currentDealBoxValue"
+        placeholder="Ändern">
       <button class="box-input-enter" v-on:click="setCurrentDealBox(currentDealBoxValue)"><img
           src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
     </label>
-    <label class="box-link check">{{ currentCheckBox }} <input class="box-input check" v-model="currentCheckBoxValue"
-                                                               placeholder="Ändern">
+    <label class="box-link check"><a v-if="currentCheckBox === ''">Enter Checkbox</a> {{ currentCheckBox }} <input
+        type="number" class="box-input check" v-model="currentCheckBoxValue"
+        placeholder="Ändern">
       <button class="box-input-enter" v-on:click="setCurrentCheckBox(currentCheckBoxValue)"><img
           src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
     </label>
-    <label class="box-link stock">{{ currentStockBox }} <input class="box-input stock" v-model="currentStockBoxValue"
-                                                               placeholder="Ändern">
+    <label class="box-link stock"><a v-if="currentStockBox === ''">Enter Stockbox</a> {{ currentStockBox }} <input
+        type="number" class="box-input stock" v-model="currentStockBoxValue"
+        placeholder="Ändern">
       <button class="box-input-enter" v-on:click="setCurrentStockBox(currentStockBoxValue)"><img
           src="https://morfalto.sirv.com/back.png?w=128&h=17"></button>
     </label>
@@ -76,13 +79,13 @@
         <div class="step-title"><h5>Location</h5></div>
         <div class="spacer-s"></div>
         <button class="prime-btn btn-green" v-on:click="setCurrentLocation(currentDealBox)"
-                :disabled="currentDealBox === ''"><b> <a v-show="currentDealBox === ''">Dealbox eingeben</a>
+                :disabled="currentDealBox === ''"><b> <a v-show="currentDealBox === ''">Enter Dealbox</a>
           {{ currentDealBox }}</b></button>
         <button class="prime-btn btn-yellow" v-on:click="setCurrentLocation(currentCheckBox)"
-                :disabled="currentCheckBox === ''"><b> <a v-show="currentCheckBox === ''">Checkbox eingeben</a>
+                :disabled="currentCheckBox === ''"><b> <a v-show="currentCheckBox === ''">Enter Checkbox</a>
           {{ currentCheckBox }}</b></button>
         <button class="prime-btn btn-red" v-on:click="setCurrentLocation(currentStockBox)"
-                :disabled="currentStockBox === ''"><b> <a v-show="currentStockBox === ''">Stockbox eingeben</a>
+                :disabled="currentStockBox === ''"><b> <a v-show="currentStockBox === ''">Enter Stockbox</a>
           {{ currentStockBox }}</b></button>
       </b-col>
       <!-- Condition -->
@@ -131,15 +134,16 @@
       <b-col class="card c-right" v-show="this.viewState === 5" style="border-radius: 5px">
         <div class="step-title"><h5>Zubehör vollständig</h5></div>
         <div class="spacer-s"></div>
-        <button class="prime-btn btn-green" v-on:click="setCurrentAccess('Neuwertig')"><b>Neuwertig</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Leichte Gebrauchsspuren')"><b>Leichte
-          Gebrauchsspuren</b></button>
-        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Kleine Kratzer')"><b>Kleine Kratzer</b>
+        <button class="prime-btn btn-green" v-on:click="setCurrentAccess('Ja')"><b>Ja</b></button>
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('USB Kabel fehlt')"><b>USB Kabel fehlt</b>
         </button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Starke Gebrauchsspuren')"><b>Starke
-          Gebrauchsspuren</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Grosse Kratzer')"><b>Grosse Kratzer</b></button>
-        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Nicht auf Funktion überprüft')"><b>Nicht auf
+        <button class="prime-btn btn-yellow" v-on:click="setCurrentAccess('Ladegerät fehlt')"><b>Ladegerät fehlt</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('USB Dongle fehlt')"><b>USB Dongle fehlt</b>
+        </button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Teile fehlen')"><b>Grosse Kratzer</b></button>
+        <button class="prime-btn btn-red" v-on:click="setCurrentAccess('Nicht auf Vollständigkeit überprüft')"><b>Nicht
+          auf
           Funktion überprüft</b></button>
         <input class="prime-btn custom-input" v-model="currentCustomAccess" placeholder="Eingeben">
         <button class="prime-btn btn-submit" v-on:click="setCurrentAccess(currentCustomAccess)"><b>ÜBERNEHMEN</b>
@@ -153,28 +157,84 @@
       <b-col class="card" v-show="this.viewState === 6" style="border-radius: 5px">
         <div class="step-title"><h5>Bestätigen</h5></div>
         <div class="spacer-s"></div>
-        <table>
-          <tr>
-            <th>Id</th>
-            <th>Location</th>
-            <th>Zustand</th>
-            <th>Beschreibung</th>
-            <th>Verpackung</th>
-            <th>Zubehör</th>
-          </tr>
-          <tr>
-            <td>{{ this.selectedProduct.id }}</td>
-            <td>{{ this.currentLocation }}</td>
-            <td>{{ this.currentCondition }}</td>
-            <td>{{ this.currentDescription }}</td>
-            <td>{{ this.currentPackage }}</td>
-            <td>{{ this.currentAccess }}</td>
-          </tr>
-        </table>
+        <b-row>
+          <table class="table-style">
+            <tr>
+              <th>Id</th>
+              <th>Location</th>
+              <th>Zustand</th>
+              <th>Beschreibung</th>
+              <th>Verpackung</th>
+              <th>Zubehör</th>
+            </tr>
+            <tr>
+              <td>{{ this.selectedProduct.id }}</td>
+              <td>{{ this.currentLocation }}</td>
+              <td>{{ this.currentCondition }}</td>
+              <td>{{ this.currentDescription }}</td>
+              <td>{{ this.currentPackage }}</td>
+              <td>{{ this.currentAccess }}</td>
+            </tr>
+          </table>
+        </b-row>
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
-    <button v-on:click="test()">CLICK</button>
+    <b-row>
+      <b-col>
+        <button v-on:click="add()">ADD</button>
+        <button v-on:click="getAllCheckedProducts()">TEST</button>
+      </b-col>
+    </b-row>
+
+    <b-row class="table-container">
+      <table class="table-style">
+        <tr class="table-header">
+          <th></th>
+          <th>Erfasst</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Zustand</th>
+          <th>Beschreibung</th>
+          <th>Verpackung</th>
+          <th>Zubehör</th>
+          <th>Order Id</th>
+        </tr>
+        <td class="table-time-col">
+          <tr class="table-row" v-for="product in checkedProducts">
+            <b-button variant="outline-primary" v-on:click="deleteProduct(product.id)">Delete</b-button>
+          </tr>
+        </td>
+        <td class="table-time-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.erfasst }}</tr>
+        </td>
+        <td class="table-id-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.id }}</tr>
+        </td>
+        <td class="table-title-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.title }}</tr>
+        </td>
+        <td class="table-location-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.location }}</tr>
+        </td>
+        <td class="table-condition-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.zustand }}</tr>
+        </td>
+        <td class="table-description-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.zustandsbeschreibung }}</tr>
+        </td>
+        <td class="table-package-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.originalverpackung }}</tr>
+        </td>
+        <td class="table-access-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.zubehoer }}</tr>
+        </td>
+        <td class="table-access-col">
+          <tr class="table-row" v-for="product in checkedProducts">{{ product.orderId }}</tr>
+        </td>
+      </table>
+    </b-row>
   </div>
 </template>
 
@@ -183,14 +243,37 @@
 import Order from '@/components/Order.vue'
 import axios from "axios";
 import moment from 'moment'
+import App from "@/App";
+import firebase from 'firebase'
+
+
+let config = {
+  apiKey: "AIzaSyCG5GqXxoMrDu2rsV1JQ4fbCnAHXqZOEsU",
+  authDomain: "epic-warehouse.firebaseapp.com",
+  databaseURL: "https://epic-warehouse-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "epic-warehouse",
+  storageBucket: "epic-warehouse.appspot.com",
+  messagingSenderId: "49399957247",
+  appId: "1:49399957247:web:fcae518f50cf77b1f2eeca"
+}
+// Initialize Firebase
+let apps = firebase.initializeApp(config);
+let dbs = apps.database();
+let textRef = dbs.ref('texts');
 
 export default {
-  name: 'Home',
+  name: 'app',
   components: {
     Order
   },
   data() {
     return {
+      text: {
+        text: 'ddee'
+      },
+      currentMaxSheetNo: 1,
+      checkedProducts: [],
+      orderId: '',
       viewState: 1, // 1: Location
       id: '',
       currentDealBoxValue: '',
@@ -215,9 +298,37 @@ export default {
     }
   },
   methods: {
-    test: function () {
 
+    test: function () {
       const headers = {
+        "Content-Type": "application/json"
+      };
+      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab2", this.selectedProduct, {headers})
+          .then(response => console.log(response))
+      //axios.get("https://v1.nocodeapi.com/epicminds/google_sheets/CJhmuBUkPujEcsgg?tabId=Tab", {headers})
+      //    .then(response => console.log(response))
+      //axios.post("https://v1.nocodeapi.com/epicminds/google_sheets/CJhmuBUkPujEcsgg/create?title=joobble", {headers})
+      //    .then(response => console.log(response))
+    },
+
+    getDatabase: function () {
+
+      let ref = dbs.ref("texts");
+      ref.on("value", function (snapshot) {
+        console.log(snapshot.val());
+        console.log('Firebase call fired')
+      }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      });
+    },
+    add: function () {
+      textRef.push(this.text);
+      //firebase.database().ref('texts').get();
+      //let test = firebase.database().ref('texts').get();
+      console.log('add fired!!');
+      //console.log(test);
+      /**
+       const headers = {
         "Authorization": "v^1.1#i^1#p^1#I^3#r^0#f^0#t^H4sIAAAAAAAAAOVYfWwURRTv9UsqICSimKrJsZUQbe5udq/3tXAXjl5rj9L27F1rWzAwuzvbbru3u+zM2Z4GU89QjDHCHxgiaiiBfyAYhMSEaCIIQQkJBgJoBFFAY/AjKIVIAiru3h3lWkmL9IJN3H/u5r03b977/d6bmV3QX1r21EDdwNXplvsKB/tBf6HFQk8FZaUllQ8UFZaXFIAcA8tg/xP9xamiCwswjMsa24ywpioYWfvisoLZtNBPJXSFVSGWMKvAOMIs4dlosGEJy9gBq+kqUXlVpqzhkJ/ioOgTfQLwMUB0eZHHkCo3fcZUP8VAF+P1Ap8P8hyNaJehxziBwgomUCGGHjDARjM2mo7RNEu7WcZt9zjpDsrainQsqYphYgdUIB0um56r58Q6dqgQY6QTwwkVCAdro03BcKimMbbAkeMrkMUhSiBJ4JGjalVA1lYoJ9DYy+C0NRtN8DzCmHIEMiuMdMoGbwZzF+GnofZ4PC63CzgZD+dFogDyAmWtqschGTsOUyIJNjFtyiKFSCQ5HqIGGlw34kl21Gi4CIes5s8zCShLooR0P1WzKNgejESoANIkPi4pgs380wt1ZIs0h2xVosfr4hmXIRY9HoQQnV0o4y0L86iVqlVFkEzQsLVRJYuQETUajQ3IwcYwalKa9KBIzIhy7ZxZDN2A6TBJzbCYIF2KySuKG0BY08PxGRieTYgucQmChj2MVqQh8lNQ0ySBGq1M12K2fPqwn+oiRGMdjt7eXnuv067qnQ4GANrR1rAkynehOKQMW7PXM/bS+BNsUjoVHhkzscSSpGbE0mfUqhGA0kkFqhifl6nK4j4yrMBo6T8EOTk7RnZEvjqEZnjO60LOKlpwV4lQzEeHBLJF6jDjQBxM2uJQ70FEkyGPbLxRZ4k40iWBdbpExukVkU1w+0RblU8UbZxLcNtoESGAEMfxPu//qVHutNSjiNcRyUut563OOdTeWt3X522siq30tNXjzq7FvmANbG3pFlZ6muVIiHO29sS7KuX6Tv+ddsPtk+dVDUVUWeKTeUDA7PU8ouDUhQjUSTKKZNkQTChRbCY6uUg252PDAdQku9nYdl6NO1Ro7OimaHk64gnlHNS0cDyeIJCTUTg/u/l/tJPfNj3JuOtMqpwM/jJESkLmkmJPs2nHz/N2HWE1oRv3M3uTeWbH1B6kGDsg0VVZRnorPWGi7zW/Zq+Pg8e/PCzuLvf83VQmU23zsmSU0PLJltk9YVSCk+w0pt3A4/a6nF73hPKqTnMaS062c6hOxQQJY6VW/PRdXqsdI1/yAwXph05ZPgApy65CiwU4wFy6AswpLWopLppWjiWC7BIU7VjqVIx3Vx3Ze1BSg5JeWGrRWuBPc3M+Kww+Bx4Z/rBQVkRPzfnKAB67pSmhZ8yezgCaoc3Hzbg7QMUtbTH9cPGs+I3UuaKjdXhNZMm7Z8+EBzYOld8A04eNLJaSguKUpSCwYtuewcNt+39L7YXEF921tP/n1Vvnf31x9cDxKd91n/zi9PU3dwzVXH1n4aEy+ejhzzvuv7ys7Y+K3RXzyY9vffpRYf2lpZf3r3vQR+kXtzBbNg84zrUwv287f6Jl2dS9pTNeX/j+zgNhfp/85VDt6aK3r/y5ef2BLYc+WbWzf9Mu90vl++umdfe0npi3fE/ThlP0tdXczJevg84Vf5189JeFa18JhdTz3y6Y+cPGOZb2115YOaSVNG5qWbfm+w+bAwf9s9tLXuR3bk+h3Z4jVMOZ9w6G1Wd37LtUv/jSuYeW1f8ae7JvVeU13wbu1FfXPtv+xtmPo4XfPH688kLXkVl1U65uvXLw2OCx9atqG16dl6Hvb/CNNZrwEQAA",
         "X-EBAY-C-MARKETPLACE-ID": "EBAY_DE",
         "Content-Type": "application/json",
@@ -226,10 +337,39 @@ export default {
         "Vary": "Origin"
       };
 
-      this.axios.get('https://api.ebay.com/offer?sku=LPNHE179153041', {headers}).then((response) => {
+       this.axios.get('https://api.ebay.com/offer?sku=LPNHE179153041', {headers}).then((response) => {
         console.log(response.data)
         console.log("Ebay API Call made")
       })
+       */
+
+    },
+
+    deleteProduct: function (id) {
+      this.axios.delete('https://sheet2api.com/v1/V61drP5kTxut/output/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
+        console.log(response.data)
+        this.checkedProducts = response.data;
+        console.log(id + " gelöscht")
+        alert(id + " gelöscht")
+      }).catch((error) => {
+        console.log(error)
+      })
+      this.getAllCheckedProducts();
+    },
+
+    getAllCheckedProducts: function () {
+      console.log("outside for loop")
+      for (let i = 1; i <= this.orderId; i++) {
+        console.log("inside for loop")
+        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
+          console.log(response.data)
+          this.checkedProducts = response.data;
+          console.log("Tabelle " + i + " gefetcht")
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+
 
 
     },
@@ -242,6 +382,7 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 1 gefunden")
           this.selectedProduct = response.data[0];
+          this.orderId = "1";
         }
       }).catch((error) => {
         console.log(error)
@@ -252,6 +393,7 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 2 gefunden")
           this.selectedProduct = response.data[0];
+          this.orderId = "2";
         }
       }).catch((error) => {
         console.log(error)
@@ -266,10 +408,12 @@ export default {
       this.selectedProduct.originalverpackung = this.currentPackage;
       this.selectedProduct.zubehoer = this.currentAccess;
       this.selectedProduct.erfasst = this.timeStamp;
+      this.selectedProduct.orderId = this.orderId;
       const headers = {
         "Content-Type": "application/json"
       };
-      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, {headers})
+      console.log(this.orderId)
+      axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
           .then(response => console.log(response))
 
     },
@@ -375,7 +519,7 @@ export default {
   align-items: center;
   border-radius: 7px;
   background-color: white;
-  margin: 10px 5px 0 5px;
+  margin: 20px 5px 0 5px;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
 }
 
@@ -598,4 +742,70 @@ export default {
 .btn-input-top {
   position: absolute;
 }
+
+.table-container {
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.table-style {
+  max-width: 80%;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.table-header {
+  text-align: center;
+}
+
+td {
+  width: 50px;
+  overflow: hidden;
+  padding: 28px 28px 28px 28px;
+}
+
+.table-time-col {
+  max-width: 150px;
+}
+
+.table-id-col {
+  max-width: 150px;
+}
+
+.table-title-col {
+  max-width: 200px;
+}
+
+.table-location-col {
+  max-width: 100px;
+}
+
+.table-condition-col {
+  max-width: 100px;
+}
+
+.table-description-col {
+  max-width: 150px;
+}
+
+.table-package-col {
+  max-width: 100px;
+}
+
+.table-access-col {
+  max-width: 100px;
+}
+
+tr {
+  white-space: nowrap;
+  text-align: center;
+}
+
+.table-row {
+  height: 45px;
+}
+
 </style>

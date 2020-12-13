@@ -1,9 +1,35 @@
 <template>
   <div id="app">
     <nav class="navigation">
+      <div class="dropdown">
+        <button class="btn-outline-primary"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+          Dropdown button
+        </button>
+        <div class="dropdown-menu"
+             aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">
+            <router-link class="link" to="/">Product check</router-link>
+          </a>
+          <a class="dropdown-item" href="#">
+            <router-link class="link" to="/about">Overview</router-link>
+          </a>
+          <a class="dropdown-item" href="#">
+            Something else here
+          </a>
+        </div>
+      </div>
+
       <img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="200px" height="auto">
-      <router-link class="link" to="/">Product check</router-link>
-      <router-link class="link" to="/about">Overview</router-link>
+
+
+      </b-row>
+
+
     </nav>
     <router-view/>
   </div>
@@ -26,7 +52,7 @@
   padding: 20px 10% 20px 10%;
   background-color: white;
   text-align: left;
-  box-shadow: 1px 2px 3px 1px rgba(43,43,43,0.09);
+  box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
 }
 
 .logo {
@@ -53,6 +79,15 @@
   border-color: #3ABEFF;
   color: black;
   text-decoration-line: none;
+}
+
+.m-md-2 {
+  background-color: white;
+  color: #FD3D71;
+}
+
+.dropdown-toggle::after {
+  display: none;
 }
 
 
