@@ -207,7 +207,7 @@
           </tr>
         </td>
         <td class="table-time-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.erfasst }}</tr>
+          <tr class="table-row" v-for="product in checkedProducts[0]">{{ product.erfasst }}</tr>
         </td>
         <td class="table-id-col">
           <tr class="table-row" v-for="product in checkedProducts">{{ product.id }}</tr>
@@ -245,7 +245,7 @@ import axios from "axios";
 import moment from 'moment'
 import App from "@/App";
 import firebase from 'firebase'
-import {async} from "@firebase/util";
+
 
 
 let config = {
@@ -264,7 +264,10 @@ let textRef = dbs.ref('texts');
 let orderRef = dbs.ref('orders');
 
 export default {
-  name: 'app',
+  name: 'Home',
+  props: {
+    orderRef
+  },
   components: {
     Order
   },
@@ -347,7 +350,6 @@ export default {
         console.log("Ebay API Call made")
       })
        */
-
     },
 
     setOrderId: function (orderNo) {
@@ -366,38 +368,33 @@ export default {
       this.getAllCheckedProducts();
     },
 
-    getMaxOrderIdFromFirebase: function () {
-      console.log("inside GetMaxOrderId")
-
-    },
-
     getAllCheckedProducts: function () {
       console.log("inside getAllCheckedProducts")
       //this.getMaxOrderIdFromFirebase();
 
       orderRef.once("value", function (snapshot) {
-        console.log(snapshot.val());
+        // console.log(snapshot.val());
         console.log('Firebase call fired')
       } , function (errorObject) {
         console.log("The read failed: " + errorObject.code);
       }).then (response => {
-        console.log(response.node_.children_.root_.value.value_);
-        this.setOrderId(response.node_.children_.root_.value.value_)
+        // console.log(response.node_.children_.root_.value.value_);
+        this.setOrderId(response.node_.children_.root_.value.value_);
       })
 
       for (let i = 1; i <= this.fetchedOrderId; i++) {
         console.log("inside for loop")
         this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
-          console.log(response.data)
-          console.log(this.checkedProducts);
+          // console.log(response.data);
+          // console.log(this.checkedProducts);
           this.checkedProducts[i-1] = response.data;
-          console.log("Tabelle " + i + " gefetcht")
-          console.log(this.checkedProducts)
+          console.log("Tabelle " + i + " gefetcht");
+          console.log(this.checkedProducts[i-1]);
+          console.log(this.checkedProducts);
         }).catch((error) => {
           console.log(error)
         })
       }
-
 
     },
 
@@ -410,7 +407,7 @@ export default {
           console.log("Daten in Stammdaten 1 gefunden")
           this.selectedProduct = response.data[0];
           //this.orderId = 1;
-          orderRef.child('test')
+          // orderRef.child('test')
           orderRef.set({
             orderId: 1
           });
@@ -425,16 +422,16 @@ export default {
           console.log("Daten in Stammdaten 2 gefunden")
           this.selectedProduct = response.data[0];
           //this.orderId = 2;
-          orderRef.child('test')
+          // orderRef.child('test')
           orderRef.set({
             orderId: 2
           });
-
         }
       }).catch((error) => {
         console.log(error)
       })
     },
+
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
       console.log(this.timeStamp)

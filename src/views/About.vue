@@ -1,89 +1,111 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h3>Overview</h3>
+    <button v-on:click="getData()">Get Data</button>
     <b-row>
-      <table>
-        <tr>
-          <th>Erfasst</th>
-          <th>Id</th>
-          <th>Location</th>
-          <th>Zustand</th>
-          <th>Beschreibung</th>
-          <th>Verpackung</th>
-          <th>Zubehör</th>
-        </tr>
-        <tr>
-          <td></td>
-          <td>{{ this.products[0].location }}</td>
-          <td>{{ this.products[0].zustand }}</td>
-          <td>{{ this.products[0].zustandsbeschreibung }}</td>
-          <td>{{ this.products[0].originalverpackung }}</td>
-          <td>{{ this.products[0].zubehoer }}</td>
-        </tr>
-      </table>
+      <b-row class="table-container">
+        <table class="table-style">
+          <tr class="table-header">
+            <th></th>
+            <th>Erfasst</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Zustand</th>
+            <th>Beschreibung</th>
+            <th>Verpackung</th>
+            <th>Zubehör</th>
+            <th>Order Id</th>
+          </tr>
+          <td class="table-time-col">
+            <tr class="table-row" v-for="product in checkedProducts">
+              <b-button variant="outline-primary" v-on:click="deleteProduct(product.id)">Delete</b-button>
+            </tr>
+          </td>
+          <td class="table-time-col">
+            <tr class="table-row" v-for="product in checkedProducts[0]">{{ product.erfasst }}</tr>
+          </td>
+          <td class="table-id-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.id }}</tr>
+          </td>
+          <td class="table-title-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.title }}</tr>
+          </td>
+          <td class="table-location-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.location }}</tr>
+          </td>
+          <td class="table-condition-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.zustand }}</tr>
+          </td>
+          <td class="table-description-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.zustandsbeschreibung }}</tr>
+          </td>
+          <td class="table-package-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.originalverpackung }}</tr>
+          </td>
+          <td class="table-access-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.zubehoer }}</tr>
+          </td>
+          <td class="table-access-col">
+            <tr class="table-row" v-for="product in checkedProducts">{{ product.orderId }}</tr>
+          </td>
+        </table>
+      </b-row>
     </b-row>
   </div>
 </template>
 <script>
 import axios from "axios";
 import moment from "moment";
+import firebase from 'firebase';
+import Home from './Home';
+
+let oR = Home.props.orderRef
+
 
 export default {
   name: 'Home',
   components: {},
   data() {
     return {
-      products: ''
+      products: '',
+      storeArray: [],
+      checkedProducts: [0]
     }
   },
   mounted() {
-    const headers = {
-      "Content-Type": "application/json"
-    };
-    this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/output/Tab', { headers }).then((response) => {
-      console.log(response.data)
-      this.products = response.data;
-      console.log(this.product)
-    })
+
+
   },
   methods: {
-    getProductById: function (id) {
-      console.log(id);
-
-      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        if (response.data.length === 1) {
-          console.log(response.data)
-          console.log("Daten in Stammdaten 1 gefunden")
-          this.selectedProduct = response.data[0];
-        }
-      }).catch((error) => {
-        console.log(error)
+    getData: function () {
+      console.log("inside getAllCheckedProducts")
+      //this.getMaxOrderIdFromFirebase();
+      /**
+       oR.once("value", function (snapshot) {
+        // console.log(snapshot.val());
+        console.log('Firebase call fired')
+      } , function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      }).then (response => {
+        // console.log(response.node_.children_.root_.value.value_);
+        this.setOrderId(response.node_.children_.root_.value.value_);
       })
+       */
 
-      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten-2/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        if (response.data.length === 1) {
-          console.log(response.data)
-          console.log("Daten in Stammdaten 2 gefunden")
-          this.selectedProduct = response.data[0];
-        }
-      }).catch((error) => {
-        console.log(error)
-      })
-    },
-    pushSelectedProduct: function () {
-      this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
-      console.log(this.timeStamp)
-      this.selectedProduct.location = this.currentLocation;
-      this.selectedProduct.zustand = this.currentCondition;
-      this.selectedProduct.zustandsbeschreibung = this.currentDescription;
-      this.selectedProduct.originalverpackung = this.currentPackage;
-      this.selectedProduct.zubehoer = this.currentAccess;
-      this.selectedProduct.erfasst = this.timeStamp;
-      const headers = {
-        "Content-Type": "application/json"
-      };
-      axios.post("https://sheet2api.com/v1/V61drP5kTxut/output/Tab", this.selectedProduct, {headers})
-          .then(response => console.log(response))
+      for (let i = 1; i <= 2; ++i) {
+        console.log("Tabelle " + i + " gefetcht");
+        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
+          // console.log(response.data);
+          // console.log(this.checkedProducts);
+          let arr = [].concat(response.data);
+          console.log(arr);
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
+
+
     }
   }
 }
