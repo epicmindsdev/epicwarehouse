@@ -245,6 +245,7 @@ import axios from "axios";
 import moment from 'moment'
 import App from "@/App";
 import firebase from 'firebase'
+import {async} from "@firebase/util";
 
 
 let config = {
@@ -260,6 +261,7 @@ let config = {
 let apps = firebase.initializeApp(config);
 let dbs = apps.database();
 let textRef = dbs.ref('texts');
+let orderRef = dbs.ref('orders');
 
 export default {
   name: 'app',
@@ -273,7 +275,10 @@ export default {
       },
       currentMaxSheetNo: 1,
       checkedProducts: [],
-      orderId: '',
+      orderId: {
+        'order': '3'
+      },
+      fetchedOrderId: '',
       viewState: 1, // 1: Location
       id: '',
       currentDealBoxValue: '',
@@ -345,6 +350,10 @@ export default {
 
     },
 
+    setOrderId: function (orderNo) {
+      this.fetchedOrderId = orderNo;
+    },
+
     deleteProduct: function (id) {
       this.axios.delete('https://sheet2api.com/v1/V61drP5kTxut/output/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
         console.log(response.data)
@@ -357,19 +366,37 @@ export default {
       this.getAllCheckedProducts();
     },
 
+    getMaxOrderIdFromFirebase: function () {
+      console.log("inside GetMaxOrderId")
+
+    },
+
     getAllCheckedProducts: function () {
-      console.log("outside for loop")
-      for (let i = 1; i <= this.orderId; i++) {
+      console.log("inside getAllCheckedProducts")
+      //this.getMaxOrderIdFromFirebase();
+
+      orderRef.once("value", function (snapshot) {
+        console.log(snapshot.val());
+        console.log('Firebase call fired')
+      } , function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      }).then (response => {
+        console.log(response.node_.children_.root_.value.value_);
+        this.setOrderId(response.node_.children_.root_.value.value_)
+      })
+
+      for (let i = 1; i <= this.fetchedOrderId; i++) {
         console.log("inside for loop")
         this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
           console.log(response.data)
-          this.checkedProducts = response.data;
+          console.log(this.checkedProducts);
+          this.checkedProducts[i-1] = response.data;
           console.log("Tabelle " + i + " gefetcht")
+          console.log(this.checkedProducts)
         }).catch((error) => {
           console.log(error)
         })
       }
-
 
 
     },
@@ -382,7 +409,11 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 1 gefunden")
           this.selectedProduct = response.data[0];
-          this.orderId = "1";
+          //this.orderId = 1;
+          orderRef.child('test')
+          orderRef.set({
+            orderId: 1
+          });
         }
       }).catch((error) => {
         console.log(error)
@@ -393,7 +424,12 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 2 gefunden")
           this.selectedProduct = response.data[0];
-          this.orderId = "2";
+          //this.orderId = 2;
+          orderRef.child('test')
+          orderRef.set({
+            orderId: 2
+          });
+
         }
       }).catch((error) => {
         console.log(error)
