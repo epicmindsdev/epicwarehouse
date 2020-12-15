@@ -1,21 +1,22 @@
 <template>
   <div class="about">
-    <h3>Overview</h3>
-    <button v-on:click="getData()">Get Data</button>
+    <b-row> </b-row>
     <b-row>
-      <b-row class="table-container">
+      <b-button variant="outline-primary" v-on:click="getData()" style="margin: 30px auto 20px; border-radius: 70px; padding: 10px 10px 10px 10px"><img src="https://morfalto.sirv.com/blue_web-pict-30.png_64.png?w=27" width="27" height="26"></b-button>
+      <b-row class="table-container" v-show="combinedArr.length !== 0">
+
         <table class="table-style">
           <tr class="table-header">
-            <th></th>
-            <th>Erfasst</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Location</th>
-            <th>Zustand</th>
-            <th>Beschreibung</th>
-            <th>Verpackung</th>
-            <th>Zubehör</th>
-            <th>Order Id</th>
+            <th class="table-col time"></th>
+            <th class="table-col time">Erfasst</th>
+            <th class="table-col id">Id</th>
+            <th class="table-col title">Name</th>
+            <th class="table-col location">Location</th>
+            <th class="table-col condition">Zustand</th>
+            <th class="table-col description">Beschreibung</th>
+            <th class="table-col package">Verpackung</th>
+            <th class="table-col access">Zubehör</th>
+            <th class="table-col access">Order Id</th>
           </tr>
           <td class="table-col time">
             <tr class="table-row" v-for="product in combinedArr">
@@ -44,7 +45,7 @@
           <td class="table-col package">
             <tr class="table-row" v-for="product in combinedArr">{{ product.originalverpackung }}</tr>
           </td>
-          <td class="ttable-col access">
+          <td class="table-col access">
             <tr class="table-row" v-for="product in combinedArr">{{ product.zubehoer }}</tr>
           </td>
           <td class="table-col access">
@@ -59,10 +60,12 @@
 import axios from "axios";
 import moment from "moment";
 import firebase from 'firebase';
+import Apps from '@/App';
 import Home from './Home';
 
 let oR = Home.props.orderRef
 
+//let test = Apps.props.passData
 
 export default {
   name: 'Home',
@@ -83,7 +86,6 @@ export default {
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     }).then(response => {
-      // console.log(response.node_.children_.root_.value.value_);
       this.setOrderId(response.node_.children_.root_.value.value_);
       console.log(this.fetchedOrderId)
     })
@@ -103,50 +105,47 @@ export default {
       this.combinedArr = [];
 
       for (let i = 1; i <= this.fetchedOrderId; ++i) {
-        //console.log(this.fetchedOrderId)
-        //console.log("Tabelle " + i + " gefetcht");
         this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
           arr = response.data;
           arrLength = response.data.length;
         }).then((response) => {
-          for (let l = 0; l < arrLength; ++l)
+          for (let l = 0; l < arrLength; ++l) {
             this.combinedArr.push(arr[l])
+          }
+          console.log(this.combinedArr)
         }).catch((error) => {
           console.log(error)
         })
-        //console.log(this.combinedArr);
       }
+
     },
 
     deleteProduct: function (id, orderId) {
       this.axios.delete('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + orderId + '/Tabellenblatt1?limit=1000&query_type=and&id=' + id).then((response) => {
         console.log(response)
-        this.checkedProducts = response.data;
         console.log(id + " gelöscht")
-        alert(id + " gelöscht")
       }).then((response) => {
         this.getData();
       }).catch((error) => {
         console.log(error)
       })
     },
-
   }
 }
 </script>
 <style>
 
 .table-container {
-
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 .table-style {
   max-width: 80%;
   font-size: 14px;
-  margin-left: auto;
-  margin-right: auto;
+  padding-left: 10%;
+  padding-right: 10%;
   text-align: center;
 }
 
@@ -155,7 +154,9 @@ export default {
 }
 
 .table-col {
-  max-height: 35px;
+  background-color: white;
+  box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
+  padding: 35px 20px 20px 20px;
 }
 
 .time{
@@ -171,7 +172,7 @@ export default {
 }
 
 .location {
-  max-width: 100px;
+  max-width: 130px;
 }
 
 .condition {
@@ -188,9 +189,6 @@ export default {
 
 .access {
   max-width: 100px;
-  padding: 5px 5px 5px 5px;
-  background-color: white;
-  box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
 }
 
 tr {
@@ -199,7 +197,7 @@ tr {
 }
 
 .table-row {
-  height: 45px;
+  min-height: 75px;
 }
 
 </style>

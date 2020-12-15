@@ -352,21 +352,29 @@ export default {
       })
     },
 
+    setAllProductProperties: function (timeStamp, location, condition, description, pack, access, orderId) {
+      this.selectedProduct.erfasst = timeStamp;
+      this.selectedProduct.location = location;
+      this.selectedProduct.zustand = condition;
+      this.selectedProduct.zustandsbeschreibung = description;
+      this.selectedProduct.originalverpackung = pack;
+      this.selectedProduct.zubehoer = access;
+      this.selectedProduct.orderId = orderId;
+    },
+
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
       console.log(this.timeStamp)
-      this.selectedProduct.location = this.currentLocation;
-      this.selectedProduct.zustand = this.currentCondition;
-      this.selectedProduct.zustandsbeschreibung = this.currentDescription;
-      this.selectedProduct.originalverpackung = this.currentPackage;
-      this.selectedProduct.zubehoer = this.currentAccess;
-      this.selectedProduct.erfasst = this.timeStamp;
-      this.selectedProduct.orderId = this.orderId;
+
+      this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
+
       const headers = {
         "Content-Type": "application/json"
       };
       axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
           .then(response => console.log(response))
+      this.setAllProductProperties('','','','','','','');
+      this.viewState = 'location';
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
