@@ -250,6 +250,18 @@ export default {
       timeStamp: ''
     }
   },
+  mounted() {
+    orderRef.once("value", function (snapshot) {
+      // console.log(snapshot.val());
+      console.log('Firebase call fired')
+    } , function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    }).then (response => {
+      // console.log(response.node_.children_.root_.value.value_);
+      this.setOrderId(response.node_.children_.root_.value.value_);
+      console.log(this.fetchedOrderId)
+    })
+  },
   methods: {
 
     test: function () {
@@ -264,16 +276,6 @@ export default {
       //    .then(response => console.log(response))
     },
 
-    getDatabase: function () {
-
-      let ref = dbs.ref("texts");
-      ref.on("value", function (snapshot) {
-        console.log(snapshot.val());
-        console.log('Firebase call fired')
-      }, function (errorObject) {
-        console.log("The read failed: " + errorObject.code);
-      });
-    },
     add: function () {
       textRef.push(this.text);
       //firebase.database().ref('texts').get();
@@ -299,6 +301,7 @@ export default {
 
     setOrderId: function (orderNo) {
       this.fetchedOrderId = orderNo;
+      console.log(this.fetchedOrderId + "inside set id")
     },
 
     deleteProduct: function (id) {
@@ -310,36 +313,6 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-      this.getAllCheckedProducts();
-    },
-
-    getAllCheckedProducts: function () {
-      console.log("inside getAllCheckedProducts")
-      //this.getMaxOrderIdFromFirebase();
-
-      orderRef.once("value", function (snapshot) {
-        // console.log(snapshot.val());
-        console.log('Firebase call fired')
-      } , function (errorObject) {
-        console.log("The read failed: " + errorObject.code);
-      }).then (response => {
-        // console.log(response.node_.children_.root_.value.value_);
-        this.setOrderId(response.node_.children_.root_.value.value_);
-      })
-
-      for (let i = 1; i <= this.fetchedOrderId; i++) {
-        console.log("inside for loop")
-        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
-          // console.log(response.data);
-          // console.log(this.checkedProducts);
-          this.checkedProducts[i-1] = response.data;
-          console.log("Tabelle " + i + " gefetcht");
-          console.log(this.checkedProducts[i-1]);
-          console.log(this.checkedProducts);
-        }).catch((error) => {
-          console.log(error)
-        })
-      }
 
     },
 
@@ -351,11 +324,12 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 1 gefunden")
           this.selectedProduct = response.data[0];
-          //this.orderId = 1;
-          // orderRef.child('test')
-          orderRef.set({
-            orderId: 1
-          });
+          this.orderId = 1;
+          if(this.fetchedOrderId < this.orderId) {
+            orderRef.set({
+              orderId: 1
+            });
+          }
         }
       }).catch((error) => {
         console.log(error)
@@ -366,11 +340,12 @@ export default {
           console.log(response.data)
           console.log("Daten in Stammdaten 2 gefunden")
           this.selectedProduct = response.data[0];
-          //this.orderId = 2;
-          // orderRef.child('test')
-          orderRef.set({
-            orderId: 2
-          });
+          this.orderId = 2;
+          if(this.fetchedOrderId < this.orderId) {
+            orderRef.set({
+              orderId: 2
+            });
+          }
         }
       }).catch((error) => {
         console.log(error)
@@ -390,10 +365,8 @@ export default {
       const headers = {
         "Content-Type": "application/json"
       };
-      console.log(this.orderId)
       axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
           .then(response => console.log(response))
-
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {

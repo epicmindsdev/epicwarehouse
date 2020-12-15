@@ -3,13 +3,10 @@
     <nav class="navigation">
 
       <b-row>
-      <img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="270px" height="auto">
-
-          <router-link class="link" to="/">CHECK</router-link>
-          <router-link class="link" to="/about">OVERVIEW</router-link>
-
+        <img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="270px" height="37px">
+        <router-link class="link" to="/">CHECK</router-link>
+        <router-link class="link" to="/about">OVERVIEW</router-link>
       </b-row>
-
 
     </nav>
     <router-view/>
@@ -35,6 +32,7 @@
   background-color: white;
   text-align: left;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
+  border-radius: 0 0 15px 15px;
 }
 
 .logo {
