@@ -180,61 +180,6 @@
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col>
-        <button v-on:click="add()">ADD</button>
-        <button v-on:click="getAllCheckedProducts()">TEST</button>
-      </b-col>
-    </b-row>
-
-    <b-row class="table-container">
-      <table class="table-style">
-        <tr class="table-header">
-          <th></th>
-          <th>Erfasst</th>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Location</th>
-          <th>Zustand</th>
-          <th>Beschreibung</th>
-          <th>Verpackung</th>
-          <th>Zubehör</th>
-          <th>Order Id</th>
-        </tr>
-        <td class="table-time-col">
-          <tr class="table-row" v-for="product in checkedProducts">
-            <b-button variant="outline-primary" v-on:click="deleteProduct(product.id)">Delete</b-button>
-          </tr>
-        </td>
-        <td class="table-time-col">
-          <tr class="table-row" v-for="product in checkedProducts[0]">{{ product.erfasst }}</tr>
-        </td>
-        <td class="table-id-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.id }}</tr>
-        </td>
-        <td class="table-title-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.title }}</tr>
-        </td>
-        <td class="table-location-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.location }}</tr>
-        </td>
-        <td class="table-condition-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.zustand }}</tr>
-        </td>
-        <td class="table-description-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.zustandsbeschreibung }}</tr>
-        </td>
-        <td class="table-package-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.originalverpackung }}</tr>
-        </td>
-        <td class="table-access-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.zubehoer }}</tr>
-        </td>
-        <td class="table-access-col">
-          <tr class="table-row" v-for="product in checkedProducts">{{ product.orderId }}</tr>
-        </td>
-      </table>
-    </b-row>
   </div>
 </template>
 

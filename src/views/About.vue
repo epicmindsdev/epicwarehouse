@@ -93,17 +93,27 @@ export default {
       })
        */
 
-      for (let i = 1; i <= 2; ++i) {
+
+      let arr = [];
+
+      for (let i = 0; i < 2; ++i) {
         console.log("Tabelle " + i + " gefetcht");
-        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + i + '/Tabellenblatt1?').then((response) => {
+        let a = i + 1;
+        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + a + '/Tabellenblatt1?').then((response) => {
           // console.log(response.data);
           // console.log(this.checkedProducts);
-          let arr = [].concat(response.data);
-          console.log(arr);
+          arr[i] = response.data;
+
+          console.log("arr 0: " + arr[i] +  arr[0])
+
+
         }).catch((error) => {
           console.log(error)
         })
       }
+
+      let combined = [].concat(arr[0], arr[1]);
+      console.log(arr[1]);
 
 
     }
