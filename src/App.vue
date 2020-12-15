@@ -27,8 +27,10 @@
     </div>
     <div v-show="this.loginView === 3">
       <nav class="navigation">
+
         <b-row>
           <img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="185px" height="26px">
+
           <router-link class="link" to="/">CHECK</router-link>
           <router-link class="link" to="/about">OVERVIEW</router-link>
         </b-row>
@@ -83,7 +85,6 @@ export default {
 
 .logo {
   margin-right: auto;
-  margin-left: auto;
   margin-top: 5px;
 }
 
@@ -92,7 +93,7 @@ export default {
   padding: 6px 10px 6px 10px;
   border-radius: 4px;
   border-color: lightblue;
-  margin-left: 20px;
+  margin-right: 0;
   color: black;
   border-width: 1px;
   border-style: solid;
