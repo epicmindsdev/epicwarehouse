@@ -19,9 +19,7 @@
           <b-input type="password" v-model="password"></b-input>
         </label></b-row>
         <b-row>
-          <b-button variant="outline-primary" style="margin-top: 15px; margin-left: auto; margin-right: auto"
-                    v-on:click="login(username, password)">Submit
-          </b-button>
+          <b-button class="submit-btn" variant="outline-primary" v-on:click="login(username, password)">Submit</b-button>
         </b-row>
 
       </div>
@@ -134,8 +132,8 @@ export default {
   padding: 50px 95px 95px 95px;
 }
 
-.spacer-m {
-  height: 6px;
+.spacer-s {
+  height: 1px;
 }
 
 .spacer-m {
@@ -178,6 +176,24 @@ export default {
 
 .mid {
   margin-top: 25vh;
-
 }
+
+.submit-btn {
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  border-color: #1BB5FF ;
+  color: #1BB5FF;
+}
+.submit-btn:hover {
+  background-color: #1BB5FF;
+  color: white;
+}
+.submit-btn:focus {
+  background-color: #1BB5FF;
+  color: white;
+}
+
+
 </style>
