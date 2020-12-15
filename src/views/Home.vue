@@ -374,7 +374,9 @@ export default {
       axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
           .then(response => console.log(response))
       this.setAllProductProperties('','','','','','','');
-      this.viewState = 'location';
+      this.selectedProduct = '';
+      this.id = '';
+      this.viewState = 1;
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {

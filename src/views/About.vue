@@ -146,7 +146,7 @@ export default {
   font-size: 14px;
   padding-left: 10%;
   padding-right: 10%;
-  text-align: center;
+  text-align: left;
 }
 
 .table-header {
@@ -157,6 +157,7 @@ export default {
   background-color: white;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
   padding: 35px 20px 20px 20px;
+  text-align: left;
 }
 
 .time{
@@ -193,7 +194,7 @@ export default {
 
 tr {
   white-space: nowrap;
-  text-align: center;
+  text-align: left;
 }
 
 .table-row {
