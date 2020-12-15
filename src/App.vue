@@ -8,16 +8,16 @@
         <b-row class="card-title">
           Username
         </b-row>
-        <b-row><label>
-          <b-input v-model="username"></b-input>
-        </label></b-row>
+        <b-row>
+          <b-input class="input-login" v-model="username"></b-input>
+        </b-row>
         <div class="spacer-s"></div>
         <b-row class="card-title">
           Password
         </b-row>
-        <b-row><label>
-          <b-input type="password" v-model="password"></b-input>
-        </label></b-row>
+        <b-row>
+          <b-input class="input-login" type="password" v-model="password"></b-input>
+        </b-row>
         <b-row>
           <b-button class="submit-btn" variant="outline-primary" v-on:click="login(username, password)">Submit</b-button>
         </b-row>
@@ -83,7 +83,8 @@ export default {
 }
 
 .logo {
-  margin-right: 30px;
+  margin-right: auto;
+  margin-left: auto;
   margin-top: 5px;
 }
 
@@ -129,7 +130,14 @@ export default {
   border-radius: 10px;
   margin: auto;
   box-shadow: 3px 3px 4px 2px rgba(43, 43, 43, 0.09);
-  padding: 50px 95px 95px 95px;
+  padding: 50px 65px 25px 65px;
+}
+ .input-login {
+   width: 100%;
+ }
+
+.card-title {
+  width: 100%;
 }
 
 .spacer-s {
@@ -179,7 +187,7 @@ export default {
 }
 
 .submit-btn {
-  margin-top: 15px;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
