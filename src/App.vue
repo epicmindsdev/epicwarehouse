@@ -79,7 +79,6 @@ export default {
   background-color: white;
   text-align: left;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
-  border-radius: 0 0 15px 15px;
 }
 
 .logo {
