@@ -3,7 +3,7 @@
   <div id="app">
     <div class="login-container" v-show="this.loginView === 1 || this.loginView === 2">
       <div class="login-card" v-show="this.loginView === 1">
-        <b-row><img class="logo" src="https://morfalto.sirv.com/Stock%20Logo.png" width="185px" height="26px"></b-row>
+        <b-row><img class="logo-login" src="https://morfalto.sirv.com/Stock%20Logo.png" width="185px" height="26px"></b-row>
         <b-row class="spacer-m"></b-row>
         <b-row class="card-title">
           Username
@@ -85,6 +85,13 @@ export default {
 
 .logo {
   margin-right: auto;
+  margin-left: 25px;
+  margin-top: 5px;
+}
+
+.logo-login {
+  margin-right: auto;
+  margin-left: auto;
   margin-top: 5px;
 }
 
@@ -93,7 +100,7 @@ export default {
   padding: 6px 10px 6px 10px;
   border-radius: 4px;
   border-color: lightblue;
-  margin-right: 0;
+  margin-right: 40px;
   color: black;
   border-width: 1px;
   border-style: solid;

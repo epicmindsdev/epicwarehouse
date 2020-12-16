@@ -34,7 +34,7 @@
     <!-- product check -->
     <b-row class="p-element-layout" v-show="this.selectedProduct !== ''" style="margin-left: auto; margin-right: auto">
       <!-- ProductDetails -->
-      <b-col class="card c-left" v-show="this.viewState !== 6" style="border-radius: 5px">
+      <b-col class="card c-left" v-show="this.viewState !== 6 && this.viewState !== 7" style="border-radius: 5px">
         <div class="p-title"><h5>{{ this.selectedProduct.title }}</h5></div>
         <div class="spacer-s"></div>
         <div class="p-price">€ {{ this.selectedProduct.price }}</div>
@@ -180,6 +180,10 @@
         <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
+    <!-- Loading -->
+    <b-row>
+      <span class="loader mid" v-show="this.viewState === 7"></span>
+    </b-row>
   </div>
 </template>
 
@@ -190,7 +194,6 @@ import axios from "axios";
 import moment from 'moment'
 import App from "@/App";
 import firebase from 'firebase'
-
 
 
 let config = {
@@ -247,16 +250,17 @@ export default {
       currentCustomAccess: '',
       currentArrayDescription: [],
       currentArrayAccess: [],
-      timeStamp: ''
+      timeStamp: '',
+      saveConfirm: false
     }
   },
   mounted() {
     orderRef.once("value", function (snapshot) {
       // console.log(snapshot.val());
       console.log('Firebase call fired')
-    } , function (errorObject) {
+    }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
-    }).then (response => {
+    }).then(response => {
       // console.log(response.node_.children_.root_.value.value_);
       this.setOrderId(response.node_.children_.root_.value.value_);
       console.log(this.fetchedOrderId)
@@ -319,37 +323,35 @@ export default {
     getProductById: function (id) {
       console.log(id);
 
-      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        if (response.data.length === 1) {
-          console.log(response.data)
-          console.log("Daten in Stammdaten 1 gefunden")
-          this.selectedProduct = response.data[0];
-          this.orderId = 1;
-          if(this.fetchedOrderId < this.orderId) {
-            orderRef.set({
-              orderId: 1
-            });
-          }
-        }
-      }).catch((error) => {
-        console.log(error)
+      orderRef.once("value", function (snapshot) {
+        // console.log(snapshot.val());
+        console.log('Firebase call fired')
+      }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      }).then(response => {
+        this.setOrderId(response.node_.children_.root_.value.value_);
+        console.log(this.fetchedOrderId)
       })
 
-      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v3-stammdaten-2/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        if (response.data.length === 1) {
-          console.log(response.data)
-          console.log("Daten in Stammdaten 2 gefunden")
-          this.selectedProduct = response.data[0];
-          this.orderId = 2;
-          if(this.fetchedOrderId < this.orderId) {
-            orderRef.set({
-              orderId: 2
-            });
+      for (let i = 1; i <= this.fetchedOrderId; ++i) {
+        this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v2-stammdaten-' + i + '/Tabellenblatt1?limit=1000&query_type=and&id=' + id).then((response) => {
+          if (response.data.length === 1) {
+            console.log(response.data)
+            console.log("Daten in Stammdaten " + i + " gefunden")
+            this.selectedProduct = response.data[0];
+            this.orderId = i;
+            /**
+             if(this.fetchedOrderId < this.orderId) {
+              orderRef.set({
+                orderId: 1
+              });
+            }
+             */
           }
-        }
-      }).catch((error) => {
-        console.log(error)
-      })
+        }).catch((error) => {
+          console.log(error)
+        })
+      }
     },
 
     setAllProductProperties: function (timeStamp, location, condition, description, pack, access, orderId) {
@@ -371,12 +373,22 @@ export default {
       const headers = {
         "Content-Type": "application/json"
       };
+      this.viewState = 7;
       axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
-          .then(response => console.log(response))
-      this.setAllProductProperties('','','','','','','');
-      this.selectedProduct = '';
-      this.id = '';
-      this.viewState = 1;
+          .then(response => {
+            if (response.status === 201) {
+              this.saveConfirm = true;
+              this.setAllProductProperties('', '', '', '', '', '', '');
+              this.selectedProduct = '';
+              this.id = '';
+              this.viewState = 1;
+            } else {
+              alert("Übertragungsfehler")
+              this.viewState = 6;
+            }
+            console.log(response)
+          })
+      this.saveConfirm = false;
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
@@ -569,7 +581,7 @@ export default {
 
 .p-image-item {
   width: auto;
-  max-width: 250px;
+  max-width: 80%;
   height: auto;
   max-height: 300px;
 }
@@ -688,7 +700,7 @@ export default {
   border-radius: 10px 0 10px 0;
   border-color: #3ABEFF;
   background-color: white;
-  color: #3ABEFF;
+  color: black;
   font-size: 18px;
   height: 45px;
   min-width: 100%;
@@ -712,20 +724,22 @@ export default {
 
 .table-style {
   max-width: 80%;
-  font-size: 14px;
+  font-size: 7.5px;
+  margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
-  text-align: center;
+  text-align: left;
 }
 
 .table-header {
-  text-align: center;
+  text-align: left;
 }
 
 td {
+  text-align: left;
   width: 50px;
   overflow: hidden;
-  padding: 28px 28px 28px 28px;
+  padding: 5px 5px 28px 20px;
 }
 
 .table-time-col {
@@ -767,6 +781,47 @@ tr {
 
 .table-row {
   height: 45px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  border-top: 4px solid #D9F2FF;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader::after {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-left: 4px solid #1BB5FF;
+  border-bottom: 4px solid transparent;
+  animation: rotation 0.5s linear infinite reverse;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.mid {
+  max-height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px 5px 5px 5px;
 }
 
 </style>

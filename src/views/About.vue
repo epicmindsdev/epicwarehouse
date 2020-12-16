@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <b-row> </b-row>
-    <b-row>
+    <b-row style="margin: auto">
       <b-button variant="outline-primary" v-on:click="getData()" style="margin: 30px auto 20px; border-radius: 70px; padding: 10px 10px 10px 10px"><img src="https://morfalto.sirv.com/blue_web-pict-30.png_64.png?w=27" width="27" height="26"></b-button>
       <b-row class="table-container" v-show="combinedArr.length !== 0">
 
@@ -136,17 +136,15 @@ export default {
 <style>
 
 .table-container {
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
+margin-left: auto;
+margin-right: auto;
 }
 
 .table-style {
   max-width: 80%;
-  font-size: 14px;
-  padding-left: 10%;
-  padding-right: 10%;
-  text-align: left;
+  font-size: 8px;
+
 }
 
 .table-header {
@@ -156,12 +154,14 @@ export default {
 .table-col {
   background-color: white;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
-  padding: 35px 20px 20px 20px;
-  text-align: left;
+  padding: 35px 5px 20px 5px;
+  text-align: center;
 }
 
 .time{
   max-width: 150px;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .id {
@@ -181,7 +181,7 @@ export default {
 }
 
 .description {
-  max-width: 150px;
+  max-width: 100px;
 }
 
 .package {
