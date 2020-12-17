@@ -51,9 +51,9 @@ export default {
   },
   methods: {
     login: function (username, password) {
-      if (username === '' && password === '') {
+      if (username === 'admin' && password === 'admin') {
         this.loginView = 2
-        setTimeout(() => this.loginView = 3, 50);
+        setTimeout(() => this.loginView = 3, 2000);
       }
     }
 
