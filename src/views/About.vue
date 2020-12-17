@@ -1,8 +1,10 @@
 <template>
   <div class="about">
-    <b-row> </b-row>
+    <b-row></b-row>
     <b-row style="margin: auto">
-      <b-button variant="outline-primary" v-on:click="getData()" style="margin: 30px auto 20px; border-radius: 70px; padding: 10px 10px 10px 10px"><img src="https://morfalto.sirv.com/blue_web-pict-30.png_64.png?w=27" width="27" height="26"></b-button>
+      <b-button variant="outline-primary" v-on:click="getData()"
+                style="margin: 30px auto 20px; border-radius: 70px; padding: 10px 10px 10px 10px"><img
+          src="https://morfalto.sirv.com/blue_web-pict-30.png_64.png?w=27" width="27" height="26"></b-button>
       <b-row class="table-container" v-show="combinedArr.length !== 0">
 
         <table class="table-style">
@@ -65,8 +67,6 @@ import Home from './Home';
 
 let oR = Home.props.orderRef
 
-//let test = Apps.props.passData
-
 export default {
   name: 'Home',
   components: {},
@@ -75,7 +75,7 @@ export default {
       products: '',
       combinedArr: [],
       checkedProducts: [],
-      fetchedOrderId: ''
+      fetchedOrderId: '',
     }
   },
   mounted() {
@@ -89,8 +89,6 @@ export default {
       this.setOrderId(response.node_.children_.root_.value.value_);
       console.log(this.fetchedOrderId)
     })
-
-
   },
   methods: {
     setOrderId: function (id) {
@@ -117,7 +115,6 @@ export default {
           console.log(error)
         })
       }
-
     },
 
     deleteProduct: function (id, orderId) {
@@ -129,7 +126,7 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-    },
+    }
   }
 }
 </script>
@@ -137,8 +134,8 @@ export default {
 
 .table-container {
   width: 100%;
-margin-left: auto;
-margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .table-style {
@@ -158,7 +155,7 @@ margin-right: auto;
   text-align: center;
 }
 
-.time{
+.time {
   max-width: 150px;
   padding-left: 15px;
   padding-right: 15px;

@@ -28,13 +28,14 @@
     <b-row class="p-element-layout" v-show="this.viewState === 1" style="margin-left: auto; margin-right: auto">
       <label
           style="min-width: 100%; margin-left: auto; margin-right: auto;">
-        <input class="input-top" v-model="id" v-on:keydown.enter="getProductById(id)" placeholder="LPN Code einscannen">
+        <input class="input-top" ref="lookup" v-model="id" v-on:keydown.enter="getProductById(id)" placeholder="Enter ID">
       </label>
     </b-row>
     <!-- product check -->
     <b-row class="p-element-layout" v-show="this.selectedProduct !== ''" style="margin-left: auto; margin-right: auto">
       <!-- ProductDetails -->
       <b-col class="card c-left" v-show="this.viewState !== 6 && this.viewState !== 7" style="border-radius: 5px">
+        <div class="p-title"><h6 style="font-size: 12px">{{ this.selectedProduct.id }}</h6></div>
         <div class="p-title"><h5>{{ this.selectedProduct.title }}</h5></div>
         <div class="spacer-s"></div>
         <div class="p-price">€ {{ this.selectedProduct.price }}</div>
@@ -255,6 +256,7 @@ export default {
     }
   },
   mounted() {
+
     orderRef.once("value", function (snapshot) {
       // console.log(snapshot.val());
       console.log('Firebase call fired')
@@ -308,20 +310,17 @@ export default {
       console.log(this.fetchedOrderId + "inside set id")
     },
 
-    deleteProduct: function (id) {
-      this.axios.delete('https://sheet2api.com/v1/V61drP5kTxut/output/Tab?limit=1000&query_type=and&id=' + id).then((response) => {
-        console.log(response.data)
-        this.checkedProducts = response.data;
-        console.log(id + " gelöscht")
-        alert(id + " gelöscht")
-      }).catch((error) => {
-        console.log(error)
-      })
-
-    },
-
     getProductById: function (id) {
       console.log(id);
+      console.log(this.selectedProduct)
+      if(this.selectedProduct.id !== '') {
+        this.currentLocation = '';
+        this.currentCondition = '';
+        this.currentArrayDescription = [];
+        this.currentPackage = '';
+        this.currentArrayAccess = [];
+        this.id = '';
+      }
 
       orderRef.once("value", function (snapshot) {
         // console.log(snapshot.val());
@@ -336,7 +335,7 @@ export default {
       for (let i = 1; i <= this.fetchedOrderId; ++i) {
         this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-1v2-stammdaten-' + i + '/Tabellenblatt1?limit=1000&query_type=and&id=' + id).then((response) => {
           if (response.data.length === 1) {
-            console.log(response.data)
+            console.log(response.data[0])
             console.log("Daten in Stammdaten " + i + " gefunden")
             this.selectedProduct = response.data[0];
             this.orderId = i;
@@ -352,6 +351,7 @@ export default {
           console.log(error)
         })
       }
+      this.id = '';
     },
 
     setAllProductProperties: function (timeStamp, location, condition, description, pack, access, orderId) {
@@ -382,6 +382,7 @@ export default {
               this.selectedProduct = '';
               this.id = '';
               this.viewState = 1;
+              this.$nextTick(() => this.$refs.lookup.focus())
             } else {
               alert("Übertragungsfehler")
               this.viewState = 6;
@@ -389,6 +390,8 @@ export default {
             console.log(response)
           })
       this.saveConfirm = false;
+
+      console.log(this.$refs.lookup)
     },
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
