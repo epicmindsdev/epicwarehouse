@@ -28,7 +28,8 @@
     <b-row class="p-element-layout" v-show="this.viewState === 1" style="margin-left: auto; margin-right: auto">
       <label
           style="min-width: 100%; margin-left: auto; margin-right: auto;">
-        <input class="input-top" ref="lookup" v-model="id" v-on:keydown.enter="getProductById(id)" placeholder="Enter ID">
+        <input class="input-top" ref="lookup" v-model="id" v-on:keydown.enter="getProductById(id)"
+               placeholder="Enter ID">
       </label>
     </b-row>
     <!-- product check -->
@@ -252,7 +253,8 @@ export default {
       currentArrayDescription: [],
       currentArrayAccess: [],
       timeStamp: '',
-      saveConfirm: false
+      saveConfirm: false,
+      alreadyPushed: false
     }
   },
   mounted() {
@@ -313,7 +315,7 @@ export default {
     getProductById: function (id) {
       console.log(id);
       console.log(this.selectedProduct.id)
-      if(this.selectedProduct.id !== '') {
+      if (this.selectedProduct.id !== '') {
         console.log("inside if statement")
         this.currentLocation = '';
         this.currentCondition = '';
@@ -367,35 +369,58 @@ export default {
       this.selectedProduct.orderId = orderId;
     },
 
+    checkIfAlreadyPushedProduct: function (id) {
+      this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + this.orderId + '/Tabellenblatt1?limit=1000&query_type=and&id=' + this.selectedProduct.id).then((response) => {
+        if (response.data.length > 0) {
+          console.log(response.data[0])
+          console.log("Artikel schon in Sheet " + this.orderId + " vorhanden")
+          this.alreadyPushed = true
+        } else {
+          this.alreadyPushed = false
+        }
+      }).then(response => {
+
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
       console.log(this.timeStamp)
 
       this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
 
-      const headers = {
-        "Content-Type": "application/json"
-      };
-      this.viewState = 7;
-      axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
-          .then(response => {
-            if (response.status === 201) {
-              this.saveConfirm = true;
-              this.setAllProductProperties('', '', '', '', '', '', '');
-              this.selectedProduct = '';
-              this.id = '';
-              this.viewState = 1;
-              this.$nextTick(() => this.$refs.lookup.focus())
-            } else {
-              alert("Übertragungsfehler")
-              this.viewState = 6;
-            }
-            console.log(response)
-          })
-      this.saveConfirm = false;
+      this.checkIfAlreadyPushedProduct(this.selectedProduct.id);
 
-      console.log(this.$refs.lookup)
+      if (this.alreadyPushed === false) {
+        const headers = {
+          "Content-Type": "application/json"
+        };
+        this.viewState = 7;
+        axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
+            .then(response => {
+              if (response.status === 201) {
+                this.saveConfirm = true;
+                this.setAllProductProperties('', '', '', '', '', '', '');
+                this.selectedProduct = '';
+                this.id = '';
+                this.viewState = 1;
+                this.$nextTick(() => this.$refs.lookup.focus())
+              } else {
+                alert("Übertragungsfehler")
+                this.viewState = 6;
+              }
+              console.log(response)
+            })
+        this.saveConfirm = false;
+      } else if (this.alreadyPushed === true) {
+        alert('Artikel schon vorhanden!')
+        this.viewState = 6;
+      }
+
+
     },
+
     setCurrentDealBox: function (dealBox) {
       if (dealBox !== "") {
         this.currentDealBox = "DEALBOX " + dealBox;
