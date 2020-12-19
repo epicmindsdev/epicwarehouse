@@ -312,12 +312,15 @@ export default {
 
     getProductById: function (id) {
       console.log(id);
-      console.log(this.selectedProduct)
+      console.log(this.selectedProduct.id)
       if(this.selectedProduct.id !== '') {
+        console.log("inside if statement")
         this.currentLocation = '';
         this.currentCondition = '';
+        this.currentDescription = '';
         this.currentArrayDescription = [];
         this.currentPackage = '';
+        this.currentAccess = '';
         this.currentArrayAccess = [];
         this.id = '';
       }
@@ -549,7 +552,6 @@ export default {
   background-color: white;
   padding: 20px 20px 20px 20px;
   min-width: 40%;
-  max-width: 40%;
   height: fit-content;
   border-radius: 5px;
   box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
