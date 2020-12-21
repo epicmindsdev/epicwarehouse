@@ -254,7 +254,7 @@ export default {
       currentArrayAccess: [],
       timeStamp: '',
       saveConfirm: false,
-      alreadyPushed: false
+      alreadyPushed: ''
     }
   },
   mounted() {
@@ -371,18 +371,23 @@ export default {
 
     checkIfAlreadyPushedProduct: function (id) {
       this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + this.orderId + '/Tabellenblatt1?limit=1000&query_type=and&id=' + this.selectedProduct.id).then((response) => {
-        if (response.data.length > 0) {
+        console.log(response.status)
+        if (response.status === 200 || response.status === 201 || response.status === 304) {
           console.log(response.data[0])
           console.log("Artikel schon in Sheet " + this.orderId + " vorhanden")
-          this.alreadyPushed = true
+          this.alreadyPushed = true;
+          console.log("in if block")
+          console.log(this.alreadyPushed)
+          alert("Artikel schon vorhanden");
         } else {
           this.alreadyPushed = false
+          console.log("in else block")
+          console.log(this.alreadyPushed)
         }
-      }).then(response => {
-
       }).catch((error) => {
         console.log(error)
       })
+      console.log(this.alreadyPushed)
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
@@ -390,7 +395,9 @@ export default {
 
       this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
 
-      this.checkIfAlreadyPushedProduct(this.selectedProduct.id);
+      this.checkIfAlreadyPushedProduct();
+
+      console.log(this.alreadyPushed)
 
       if (this.alreadyPushed === false) {
         const headers = {
@@ -399,7 +406,7 @@ export default {
         this.viewState = 7;
         axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
             .then(response => {
-              if (response.status === 201) {
+              if (response.status === 201 || response.status === 200) {
                 this.saveConfirm = true;
                 this.setAllProductProperties('', '', '', '', '', '', '');
                 this.selectedProduct = '';
@@ -414,7 +421,6 @@ export default {
             })
         this.saveConfirm = false;
       } else if (this.alreadyPushed === true) {
-        alert('Artikel schon vorhanden!')
         this.viewState = 6;
       }
 
@@ -631,7 +637,7 @@ export default {
   border-radius: 5px;
   border-width: 0;
   color: white;
-  height: 45px;
+  height: 65px;
   font-size: 18px;
 }
 
@@ -754,7 +760,7 @@ export default {
 
 .table-style {
   max-width: 80%;
-  font-size: 7.5px;
+  font-size: 16px;
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
