@@ -179,7 +179,7 @@
             </tr>
           </table>
         </b-row>
-        <button class="btn-submit btn-confirm" v-on:click="pushSelectedProduct()"><b>Absenden</b></button>
+        <button class="btn-submit btn-confirm" v-on:click="checkIfAlreadyPushedProduct()"><b>Absenden</b></button>
       </b-col>
     </b-row>
     <!-- Loading -->
@@ -371,8 +371,8 @@ export default {
 
     checkIfAlreadyPushedProduct: function (id) {
       this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + this.orderId + '/Tabellenblatt1?limit=1000&query_type=and&id=' + this.selectedProduct.id).then((response) => {
-        console.log(response.status)
-        if (response.status === 200 || response.status === 201 || response.status === 304) {
+        console.log(response.data.length)
+        if (response.data.length > 0) {
           console.log(response.data[0])
           console.log("Artikel schon in Sheet " + this.orderId + " vorhanden")
           this.alreadyPushed = true;
@@ -387,15 +387,14 @@ export default {
       }).catch((error) => {
         console.log(error)
       })
-      console.log(this.alreadyPushed)
+      this.pushSelectedProduct();
+      this.pushSelectedProduct();
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
       console.log(this.timeStamp)
 
       this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
-
-      this.checkIfAlreadyPushedProduct();
 
       console.log(this.alreadyPushed)
 
@@ -406,7 +405,7 @@ export default {
         this.viewState = 7;
         axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
             .then(response => {
-              if (response.status === 201 || response.status === 200) {
+              if (response.status === 201) {
                 this.saveConfirm = true;
                 this.setAllProductProperties('', '', '', '', '', '', '');
                 this.selectedProduct = '';
