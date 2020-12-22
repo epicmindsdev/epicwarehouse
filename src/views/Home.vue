@@ -388,7 +388,6 @@ export default {
         console.log(error)
       })
       this.pushSelectedProduct();
-      this.pushSelectedProduct();
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
