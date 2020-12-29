@@ -393,7 +393,7 @@ export default {
 
       this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
 
-      console.log("Inside pushSelectedProduct Pushed? " + this.alreadyPushed)
+      console.log("Inside pushSelectedProduct? " + this.alreadyPushed)
 
       const headers = {
         "Content-Type": "application/json"
