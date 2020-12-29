@@ -254,7 +254,7 @@ export default {
       currentArrayAccess: [],
       timeStamp: '',
       saveConfirm: false,
-      alreadyPushed: ''
+      alreadyPushed: false
     }
   },
   mounted() {
@@ -369,25 +369,23 @@ export default {
       this.selectedProduct.orderId = orderId;
     },
 
-    checkIfAlreadyPushedProduct: function (id) {
+    checkIfAlreadyPushedProduct: function () {
       this.axios.get('https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-' + this.orderId + '/Tabellenblatt1?limit=1000&query_type=and&id=' + this.selectedProduct.id).then((response) => {
-        console.log(response.data.length)
         if (response.data.length > 0) {
           console.log(response.data[0])
           console.log("Artikel schon in Sheet " + this.orderId + " vorhanden")
-          this.alreadyPushed = true;
-          console.log("in if block")
-          console.log(this.alreadyPushed)
-          alert("Artikel schon vorhanden");
+          this.alreadyPushed = true
+          console.log("if? " + this.alreadyPushed)
+          alert('Artikel schon vorhanden!')
+          this.viewState = 6;
         } else {
           this.alreadyPushed = false
-          console.log("in else block")
-          console.log(this.alreadyPushed)
+          this.pushSelectedProduct();
+          console.log("Else? " + this.alreadyPushed)
         }
       }).catch((error) => {
         console.log(error)
       })
-      this.pushSelectedProduct();
     },
     pushSelectedProduct: function () {
       this.timeStamp = moment().format('DD.MM.YY HH:mm:ss');
@@ -395,34 +393,28 @@ export default {
 
       this.setAllProductProperties(this.timeStamp, this.currentLocation, this.currentCondition, this.currentDescription, this.currentPackage, this.currentAccess, this.orderId);
 
-      console.log(this.alreadyPushed)
+      console.log("Inside pushSelectedProduct already Pushed? " + this.alreadyPushed)
 
-      if (this.alreadyPushed === false) {
-        const headers = {
-          "Content-Type": "application/json"
-        };
-        this.viewState = 7;
-        axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
-            .then(response => {
-              if (response.status === 201) {
-                this.saveConfirm = true;
-                this.setAllProductProperties('', '', '', '', '', '', '');
-                this.selectedProduct = '';
-                this.id = '';
-                this.viewState = 1;
-                this.$nextTick(() => this.$refs.lookup.focus())
-              } else {
-                alert("Übertragungsfehler")
-                this.viewState = 6;
-              }
-              console.log(response)
-            })
-        this.saveConfirm = false;
-      } else if (this.alreadyPushed === true) {
-        this.viewState = 6;
-      }
-
-
+      const headers = {
+        "Content-Type": "application/json"
+      };
+      this.viewState = 7;
+      axios.post("https://sheet2api.com/v1/V61drP5kTxut/produktdatenfeed-2v2-checked-" + this.orderId + "/Tabellenblatt1", this.selectedProduct, {headers})
+          .then(response => {
+            if (response.status === 201) {
+              this.saveConfirm = true;
+              this.setAllProductProperties('', '', '', '', '', '', '');
+              this.selectedProduct = '';
+              this.id = '';
+              this.viewState = 1;
+              this.$nextTick(() => this.$refs.lookup.focus())
+            } else {
+              alert("Übertragungsfehler")
+              this.viewState = 6;
+            }
+            console.log(response)
+          })
+      this.saveConfirm = false;
     },
 
     setCurrentDealBox: function (dealBox) {
@@ -635,7 +627,7 @@ export default {
   border-radius: 5px;
   border-width: 0;
   color: white;
-  height: 65px;
+  height: 55px;
   font-size: 18px;
 }
 
@@ -758,7 +750,7 @@ export default {
 
 .table-style {
   max-width: 80%;
-  font-size: 16px;
+  font-size: 22px;
   margin-top: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -772,8 +764,9 @@ export default {
 td {
   text-align: left;
   width: 50px;
+  max-width: 15%;
   overflow: hidden;
-  padding: 5px 5px 28px 20px;
+  padding: 20px 5px 20px 0;
 }
 
 .table-time-col {

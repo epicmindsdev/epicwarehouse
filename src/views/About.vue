@@ -2,9 +2,19 @@
   <div class="about">
     <b-row></b-row>
     <b-row style="margin: auto">
+
       <b-button variant="outline-primary" v-on:click="getData()"
                 style="margin: 30px auto 20px; border-radius: 70px; padding: 10px 10px 10px 10px"><img
           src="https://morfalto.sirv.com/blue_web-pict-30.png_64.png?w=27" width="27" height="26"></b-button>
+      <!--
+      <b-row class="p-element-layout" style="margin-left: auto; margin-right: auto">
+        <label
+            style="min-width: 100%; margin-left: auto; margin-right: auto;">
+          <input class="input-top" ref="lookup" v-model="id" v-on:keydown.enter="getProductById(id)"
+                 placeholder="Enter ID">
+        </label>
+      </b-row>
+      -->
       <b-row class="table-container" v-show="combinedArr.length !== 0">
 
         <table class="table-style">
@@ -56,7 +66,6 @@
         </table>
       </b-row>
     </b-row>
-    <!--<b-button v-on:click="getEbay()">Ebay</b-button>-->
   </div>
 </template>
 <script>
@@ -93,48 +102,6 @@ export default {
     })
   },
   methods: {
-    getEbay: function () {
-      const headers = {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": 'Origin',
-        "X-Billbee-Api-Key": "7449D9D6-4741-4B01-ABA7-B2082279A4B3",
-        "Authorization": "Basic info@epicminds.de:Ellaha89"
-      }
-      /**
-       this.axios.get('http://localhost:80/', {headers}).then((response) => {
-        console.log(response.data)
-      }).then((response) => {
-
-      }).catch((error) => {
-        console.log(error)
-      })
-
-       const headers = {
-        "X-Billbee-Api-Key": "7449D9D6-4741-4B01-ABA7-B2082279A4B3",
-        "Authorization": "Basic info@epicminds.de:Ellaha89",
-      }
-
-      console.log(headers);
-      this.axios.get('https://app.billbee.io/api/v1/products', {headers}).then((response) => {
-        this.ebayItems = response.data;
-        console.log(response)
-      }).then((response) => {
-        console.log(response)
-      }).catch((error) => {
-        console.log(error)
-      })
-
-      const opt = {
-        method: "HEAD",
-        headers: { "X-Billbee-Api-Key": "7449D9D6-4741-4B01-ABA7-B2082279A4B3",
-          "Authorization": "Basic info@epicminds.de:Ellaha89" },
-        mode: "no-cors"
-      };
-      fetch("https://app.billbee.io/api/v1/products",opt)
-          .then(response => response.json())
-          .then(data => (console.log(data.total)));
-       */
-    },
 
     setOrderId: function (id) {
       this.fetchedOrderId = id;
@@ -185,7 +152,7 @@ export default {
 
 .table-style {
   max-width: 80%;
-  font-size: 8px;
+  font-size: 16px;
 
 }
 
@@ -243,4 +210,26 @@ tr {
   min-height: 75px;
 }
 
+.p-element-layout {
+  width: 80%;
+  margin-top: 10px;
+}
+
+.input-top {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 10px 0 10px 0;
+  border-color: #3ABEFF;
+  background-color: white;
+  color: black;
+  font-size: 18px;
+  height: 45px;
+  min-width: 100%;
+  margin-top: 10px;
+  padding: 10px 10px 10px 45px;
+  box-shadow: 1px 2px 3px 1px rgba(43, 43, 43, 0.09);
+  background-image: url(https://morfalto.sirv.com/suchen-2.png?w=18&h=18);
+  background-position: 15px center;
+  background-repeat: no-repeat;
+}
 </style>
